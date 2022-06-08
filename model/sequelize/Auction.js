@@ -1,4 +1,4 @@
-const connection = require("./index");
+const connection = require("../index");
 const {Model, DataTypes} = require("sequelize");
 
 class Auction extends Model {

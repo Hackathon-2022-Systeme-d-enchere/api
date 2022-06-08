@@ -1,8 +1,9 @@
 var cors = require("cors");
 const express = require("express");
-
+const {Auction, Bid, Product} = require("./model/sequelize");
 const app = express();
 app.use(cors());
+
 
 app.options('*', cors());
 
