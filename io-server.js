@@ -1,6 +1,6 @@
 var cors = require("cors");
 const express = require("express");
-const {Auction, Bid, Product} = require("./model/sequelize");
+const db = require("./model");
 const app = express();
 app.use(cors());
 
@@ -18,6 +18,7 @@ app.set("port", PORT);
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+db.sequelize.sync({ force: true })
 
 io.on("connection", function (socket) {
 
