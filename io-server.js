@@ -4,7 +4,6 @@ const db = require("./model");
 const app = express();
 app.use(cors());
 
-
 app.options('*', cors());
 
 const PORT = process.env.PORT || 2000;
