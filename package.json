@@ -2,9 +2,9 @@
   "name": "hackathon-wa-esgi",
   "version": "1.0.0",
   "description": "Hackathon ESGI",
-  "main": "test-io-server.js",
+  "main": "io-server.js",
   "scripts": {
-    "start": "node test-io-server"
+    "start": "node io-server"
   },
   "dependencies": {
     "axios": "^0.21.1",

@@ -1,74 +1,49 @@
-<!-- test-io-client.html -->
 <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"
+        integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ=="
+        crossorigin="anonymous"></script>
 <script>
-    
+
     var socket;
-    function init()
-    {
-        output = document.getElementById("output");
+    const userToken = '123';
+
+    function init() {
         socket = io.connect('http://localhost:2000/');
-        //testSocket(socket);
-        socket.on('test', onMessage );
-        socket.on('connect', onConnect );
-        socket.on('disconnect', onDisconnect );
-        socket.on('connect_error', onError );
-        socket.on('reconnect_error', onError );
-
+        socket.on('bid', sendBid);
+        socket.on('connect', onConnect);
+        // listen for the 'joined' event
+        socket.on('joined', onJoined);
+        onConnect();
     }
 
-    function onConnect(evt)
-        {
-            writeToScreen("CONNECTED");
-            //doSend("{\"currentBid\":200,\"auctionId\":\"711d675d-397b-4b51-8eff-866f23696480\",\"biddings\":[{\"auctionId\":\"711d675d-397b-4b51-8eff-866f23696480\",\"userId\":\"1001\",\"userName\":\"danGregor\",\"bidAmount\":150,\"bidTime\":1622093800},{\"auctionId\":\"711d675d-397b-4b51-8eff-866f23696480\",\"userId\":\"1002\",\"userName\":\"debbyShaw\",\"bidAmount\":175,\"bidTime\":1622153800},{\"auctionId\":\"711d675d-397b-4b51-8eff-866f23696480\",\"userId\":\"1003\",\"userName\":\"aprilGreen\",\"bidAmount\":200,\"bidTime\":1622193800}]}");
-        }        
-
-        function onDisconnect(evt)
-        {
-            writeToScreen("DISCONNECTED");
-        }
-
-    function sendmessage()
-    {
-        writeToScreen("button click");
-        socket.emit('test', document.getElementById("text1").value);
+    function sendBid() {
+        socket.emit('bid', {
+            bid: document.getElementById("bid_amount").value,
+            userToken: userToken
+        });
     }
 
-    function onMessage(data)
-    {
-        writeToScreen(data);
-        console.log(data);
-        //socket.close();
-        
+    function onJoined() {
+        console.log('joined');
     }
 
-    function onError(message)
-    {
-        writeToScreen('<span style="color: red;">ERROR:</span> ' + message);
+    function onConnect() {
+        socket.emit('join', {
+            userToken: userToken
+        });
     }
 
-    function doSend(message)
-    {
-        console.log("doSend");
-        writeToScreen("SENT: " + message);
-        socket.emit('test', message);
-    }
-
-    function writeToScreen(message)
-    {
-        var p = document.createElement('p');
-        p.innerHTML = message;
-        document.getElementById('output').appendChild(p);
-    }
-
-    
-    window.addEventListener("load",init,false);
+    window.addEventListener("load", init, false);
 </script>
 
-<h2>Socket.io Test</h2>
-<form>
-    <input type="text" id="text1" />
-    <input type="submit" value="OK" onclick="sendmessage()" />  
-</form>
+<div>
+    <h2>Placer une offre sur l'enchère actuel</h2>
+
+    <img src="https://via.placeholder.com/150" alt="">
+
+    <input type="number" id="bid_amount" value="0" step="0.01" min="0"/>
+    <input type="submit" onclick="sendBid()"/>
+
+</div>
 
 <div id="output"></div>
