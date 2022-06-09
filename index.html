@@ -2,52 +2,209 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="stylesheet" href="public/assets/js/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css">
+    <link rel="stylesheet" href="public/assets/js/plugins/ion-rangeslider/css/ion.rangeSlider.css">
+    <link rel="stylesheet" href="public/assets/js/plugins/slick-carousel/slick.css">
+    <link rel="stylesheet" href="public/assets/js/plugins/slick-carousel/slick-theme.css">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" id="css-main" href="public/assets/css/dashmix.min.css">
 </head>
 <body>
+<div id="page-container" class="sidebar-mini side-scroll">
 
-
-<div id="app">
-    <div class="container py-3" v-if="auction.isActive">
-        <header>
-            <div class="pricing-header p-3 pb-md-4 mx-auto text-center" id="is_active_auction">
-                <h1 class="display-4 fw-normal" id="auction_name"></h1>
-                <p class="fs-5 text-muted"></p>
+    <main id="main-container">
+        <div class="bg-image" style="background-image: url('public/assets/media/photos/photo10@2x.jpg');">
+            <div class="bg-black-75">
+                <div class="content content-full content-top text-center">
+                    <div class="pt-4 pb-3">
+                        <h1 class="fw-light text-white mb-2">Auction</h1>
+                        <h2 class="h4 fw-light text-white-75" v-if="auction.isActive">Auction is in progress</h2>
+                        <h2 class="h4 fw-light text-white-75" v-else>Auction is not active</h2>
+                    </div>
+                </div>
             </div>
-        </header>
+        </div>
 
-        <main>
-            <table class="table table-responsive">
-                <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">User</th>
-                    <th scope="col">Date</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-for="bid in bids" :key="bid.id">
-                    <th scope="row">{{bid.id}}</th>
-                    <td>{{bid[0].price}}</td>
-                    <td>{{bid[0].userUID}}</td>
-                    <td>{{bid[0].createdAt}}</td>
-                </tr>
-                </tbody>
-            </table>
-        </main>
-    </div>
-    <div class="alert alert-danger" v-else>
-        L'enchère n'est pas encore ouverte.
-    </div>
+
+        <div class="bg-body-extra-light">
+            <div class="content py-0">
+                <ul class="nav nav-tabs nav-tabs-alt border-bottom-0 justify-content-center">
+                    <li class="nav-item">
+                        <a class="nav-link text-body-color py-4 active" href="">
+                            <i class="fa fa-rocket fa-fw opacity-50"></i> <span class="d-none d-md-inline ms-1">Products sold</span> <span class="nav-main-link-badge badge rounded-pill bg-warning">{{ productsSold.length }}</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-body-color py-4" href="">
+                            <i class="fa fa-arrows-alt-h fa-fw opacity-50"></i> <span class="d-none d-md-inline ms-1">Sale in progress</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-body-color py-4" href="">
+                            <i class="fa fa-wallet fa-fw opacity-50"></i> <span class="d-none d-md-inline ms-1">Products for sale</span> <span class="nav-main-link-badge badge rounded-pill bg-primary">{{ productsForSale.length }}</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="content" id="productsSold">
+            <div class="row">
+                <div class="col-md-6 col-xl-4" v-for="product in productsSold" :key="product.id">
+                    <!-- House -->
+                    <div class="block block-rounded">
+                        <div class="block-content p-0 overflow-hidden">
+                            <a class="img-link img-fluid-100" data-toggle="layout" data-action="side_overlay_open"
+                               href="javascript:void(0)">
+                                <img class="img-fluid rounded-top" :src="product.image" alt="">
+                            </a>
+                        </div>
+                        <div class="block-content">
+                            <h4 class="h6 mb-2">{{ product.name }}</h4>
+                            <h5 class="h2 fw-light push">
+                                {{ product.minPrice }}€ <span class="fs-3 text-muted">start price</span>
+                            </h5>
+                        </div>
+                        <div class="block-content p-0">
+                            <div class="row text-center m-0 border-top border-bottom bg-body-light">
+                                <div class="col-6 border-end">
+                                    <p class="py-3 mb-0">
+                                        <i class="fa fa-fw fa-clock text-muted me-1"></i> <strong>12:00</strong>
+                                    </p>
+                                </div>
+                                <div class="col-6">
+                                    <p class="py-3 mb-0">
+                                        <i class="fa fa-fw fa-dollar text-muted me-1"></i> <strong>2$</strong> minimum
+                                        bid
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="block-content block-content-full">
+                            <div class="row">
+                                <div class="col-12">
+                                    <a class="btn btn-sm btn-alt-primary w-100" data-toggle="layout"
+                                       data-action="side_overlay_open" href="javascript:void(0)">
+                                        View
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END House -->
+                </div>
+            </div>
+        </div>
+
+        <div class="content" id="activeSale">
+            <div class="row">
+<!--                <div class="col-md-6 col-xl-4" v-for="product in activeProduct" :key="product.id">-->
+<!--                    &lt;!&ndash; House &ndash;&gt;-->
+<!--                    <div class="block block-rounded">-->
+<!--                        <div class="block-content p-0 overflow-hidden">-->
+<!--                            <a class="img-link img-fluid-100" data-toggle="layout" data-action="side_overlay_open"-->
+<!--                               href="javascript:void(0)">-->
+<!--                                <img class="img-fluid rounded-top" :src="product.image" alt="">-->
+<!--                            </a>-->
+<!--                        </div>-->
+<!--                        <div class="block-content">-->
+<!--                            <h4 class="h6 mb-2">{{ product.name }}</h4>-->
+<!--                            <h5 class="h2 fw-light push">-->
+<!--                                {{ product.minPrice }}€ <span class="fs-3 text-muted">start price</span>-->
+<!--                            </h5>-->
+<!--                        </div>-->
+<!--                        <div class="block-content p-0">-->
+<!--                            <div class="row text-center m-0 border-top border-bottom bg-body-light">-->
+<!--                                <div class="col-6 border-end">-->
+<!--                                    <p class="py-3 mb-0">-->
+<!--                                        <i class="fa fa-fw fa-clock text-muted me-1"></i> <strong>12:00</strong>-->
+<!--                                    </p>-->
+<!--                                </div>-->
+<!--                                <div class="col-6">-->
+<!--                                    <p class="py-3 mb-0">-->
+<!--                                        <i class="fa fa-fw fa-dollar text-muted me-1"></i> <strong>2$</strong> minimum-->
+<!--                                        bid-->
+<!--                                    </p>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="block-content block-content-full">-->
+<!--                            <div class="row">-->
+<!--                                <div class="col-12">-->
+<!--                                    <a class="btn btn-sm btn-alt-primary w-100" data-toggle="layout"-->
+<!--                                       data-action="side_overlay_open" href="javascript:void(0)">-->
+<!--                                        View-->
+<!--                                    </a>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    &lt;!&ndash; END House &ndash;&gt;-->
+<!--                </div>-->
+            </div>
+        </div>
+
+        <div class="content" id="productsForSale">
+            <div class="row">
+                <div class="col-md-6 col-xl-4" v-for="product in productsForSale" :key="product.id">
+                    <!-- House -->
+                    <div class="block block-rounded">
+                        <div class="block-content p-0 overflow-hidden">
+                            <a class="img-link img-fluid-100" data-toggle="layout" data-action="side_overlay_open"
+                               href="javascript:void(0)">
+                                <img class="img-fluid rounded-top" :src="product.image" alt="">
+                            </a>
+                        </div>
+                        <div class="block-content">
+                            <h4 class="h6 mb-2">{{ product.name }}</h4>
+                            <h5 class="h2 fw-light push">
+                                {{ product.minPrice }}€ <span class="fs-3 text-muted">start price</span>
+                            </h5>
+                        </div>
+                        <div class="block-content p-0">
+                            <div class="row text-center m-0 border-top border-bottom bg-body-light">
+                                <div class="col-6 border-end">
+                                    <p class="py-3 mb-0">
+                                        <i class="fa fa-fw fa-clock text-muted me-1"></i> <strong>12:00</strong>
+                                    </p>
+                                </div>
+                                <div class="col-6">
+                                    <p class="py-3 mb-0">
+                                        <i class="fa fa-fw fa-dollar text-muted me-1"></i> <strong>2$</strong> minimum
+                                        bid
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="block-content block-content-full">
+                            <div class="row">
+                                <div class="col-12">
+                                    <a class="btn btn-sm btn-alt-primary w-100" data-toggle="layout"
+                                       data-action="side_overlay_open" href="javascript:void(0)">
+                                        View
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END House -->
+                </div>
+            </div>
+        </div>
+
+    </main>
 </div>
-
+<script src="public/assets/js/dashmix.app.min.js"></script>
+<script src="public/assets/js/lib/jquery.min.js"></script>
+<script src="public/assets/js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+<script src="public/assets/js/plugins/ion-rangeslider/js/ion.rangeSlider.min.js"></script>
+<script src="public/assets/js/plugins/slick-carousel/slick.min.js"></script>
 <script src="https://unpkg.com/vue@3"></script>
 <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
 
+<script>Dashmix.helpersOnLoad(['jq-datepicker', 'jq-rangeslider', 'jq-slick']);</script>
 <script>
     const {createApp} = Vue
 
@@ -56,44 +213,67 @@
         data() {
             return {
                 auction: {
-                    isActive: false,
+                    isActive: null,
+                    name: null
                 },
                 bids: [],
+                userToken: window.location.search.split('=')[1],
+                productsSold: [],
+                productsForSale: [],
+                activeProduct: {
+                    id: null,
+                    name: null,
+                    minPrice: null,
+                    image: null,
+                    bids: []
+                }
             }
         },
         mounted() {
-            const userToken = window.location.search.split('=')[1];
             socket = io.connect('http://localhost:2000/');
             socket.on('joined', (data) => {
                 this.onJoin(data)
             });
             socket.emit('join', {
-                userToken: userToken
+                userToken: this.userToken,
             });
             socket.on('bids', (data) => {
                 this.getBIds(data)
             });
+            socket.on('products-sold', (data) => {
+                this.getProductsSold(data)
+            });
+            socket.on('products-for-sale', (data) => {
+                this.getProductsForSale(data)
+            });
+            // socket.on('active-product', (data) => {
+            //     this.getActiveProduct(data)
+            // });
         },
         methods: {
             onJoin(data) {
-                console.log(data)
-                this.auction.isActive = true
+                this.auction = data.auction
             },
             sendBid() {
-                socket.emit('bid', {
+                socket.emit('new-bid', {
                     bid: document.getElementById("bid_amount").value,
-                    userToken: userToken
+                    userToken: this.userToken
                 });
             },
             getBIds(data) {
-                this.bids = data
+                this.bids = data.bids
+            },
+            getProductsSold(data) {
+                this.productsSold = data.products
+            },
+            getProductsForSale(data) {
+                this.productsForSale = data.products
+            },
+            getActiveProduct(data) {
+                this.activeProduct = data.product
             }
         }
-    }).mount('#app')
+    }).mount('#page-container')
 </script>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
-        crossorigin="anonymous"></script>
 </body>
 </html>

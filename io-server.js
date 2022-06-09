@@ -3,7 +3,7 @@ const express = require("express");
 const db = require("./model");
 const app = express();
 app.use(cors());
-const {Auction, Bid} = require("./model/index");
+const {Auction, Bid, Product} = require("./model/index");
 const jwt_decode = require("jwt-decode");
 
 app.options('*', cors());
@@ -19,39 +19,75 @@ app.set("port", PORT);
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
-db.sequelize.sync({force: true})
+db.sequelize.sync({force: false})
 
 io.on("connection", function (socket) {
 
     socket.on("join", (data) => {
         let decoded = jwt_decode(data.userToken);
-        console.log(decoded);
+        console.log(decoded)
         Auction.findOne({
             where: {
                 roomId: decoded.room
             }
         }).then(auction => {
             socket.emit("joined", {auction: auction});
-        })
+            Bid.findAll({
+                where: {
+                    userUID: decoded.user
+                }
+            }).then(bids => {
+                socket.emit("bids", {bids: bids});
+            })
+            Product.findAll(
+                {
+                    where: {
+                        AuctionId: auction.id,
+                        isSold: false
+                    }
+                }
+            ).then(productsForSale => {
+                socket.emit("products-for-sale", {products: productsForSale});
+            })
 
-        Bid.findAll({
-            where: {
-                userUID: decoded.user
-            }
-        }).then(bids => {
-            socket.emit("bids", {bids: bids});
+            Product.findAll(
+                {
+                    where: {
+                        AuctionId: auction.id,
+                        isSold: true
+                    }
+                }
+            ).then(productsSold => {
+                socket.emit("products-sold", {products: productsSold});
+            })
+
+        }).catch(err => {
+            console.log(err);
         })
     })
 
-    socket.on("bid", (data) => {
+    socket.on("new-bid", (data) => {
         let decoded = jwt_decode(data.userToken);
-        Bid.create({
-            userUID: decoded.uid,
-            price: data.price
-        }).then(bid => {
-            io.emit("bids", {bid: bid});
+        Auction.findOne({
+            where: {
+                roomId: decoded.room
+            }
+        }).then(auction => {
+            Bid.create({
+                userUID: decoded.user,
+                price: 120,
+                AuctionId: auction.id
+            }).then(bid => {
+                Bid.findAll({
+                    where: {
+                        userUID: decoded.user
+                    }
+                }).then(bids => {
+                    console.log(bids)
+                    socket.emit("bids", {bids: bids});
+                })
+            })
         })
-        console.log(decoded)
     })
 
     socket.on("disconnect", onDisconnect);

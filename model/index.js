@@ -34,7 +34,7 @@ Object.keys(db).forEach(modelName => {
 db.sequelize = sequelize;
 db.Sequelize = Index;
 db.Auction.hasMany(db.Bid)
-db.Product.hasOne(db.Auction)
+db.Auction.hasMany(db.Product)
 db.User.hasMany(db.Auction)
 
 module.exports = db;

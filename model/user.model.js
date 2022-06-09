@@ -12,5 +12,11 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: true
         },
     })
+    // hash password before saving
+    UserModel.beforeCreate((user, options) => {
+        if (user.password) {
+            user.password = bcrypt.hashSync(user.password, 10);
+        }
+    })
     return UserModel;
 }
