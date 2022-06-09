@@ -3,6 +3,8 @@ const express = require("express");
 const db = require("./models");
 const app = express();
 const bcrypt = require("bcryptjs");
+const path = require('path');
+const fileUpload = require('express-fileupload');
 app.use(cors());
 const {Auction, User, Bid} = require("./models/index");
 const {createJWT} = require("./lib/security");
@@ -21,6 +23,7 @@ app.set("port", PORT);
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
+app.use(fileUpload());
 db.sequelize.sync({force: false})
 
 app.post('/register', async (req, res) => {
@@ -61,6 +64,38 @@ app.post('/login', async (req, res) => {
                 res.json({token: token})
             );
     }
+})
+
+app.get('/admin', (req, res) => {
+    res.sendFile(path.join(__dirname + '/admin.html'));
+})
+
+app.post('/auction', async (req, res) => {
+    let fileUpload;
+    let uploadPath;
+
+    if (!req.files || Object.keys(req.files).length === 0) {
+        res.status(400).send('No files were uploaded.');
+        return;
+    }
+
+    fileUpload = req.files.image;
+    console.log(fileUpload)
+
+    if (!['image/png', 'image/jpeg'].includes(req.files.mimetype)) {
+        res.status(400).send('Invalid file extension.');
+        return;
+    }
+
+    uploadPath = __dirname + '/uploads/' + fileUpload.name;
+
+    fileUpload.mv(uploadPath, function (err) {
+        if (err) {
+            return res.status(500).send(err);
+        }
+
+        res.send('File uploaded to ' + uploadPath);
+    });
 })
 
 io.on("connection", function (socket) {
