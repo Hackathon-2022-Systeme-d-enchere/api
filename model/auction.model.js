@@ -13,6 +13,10 @@ module.exports = (sequelize, Sequelize) => {
         owner: {
             type: Sequelize.STRING,
             allowNull: false
+        },
+        isActive: {
+            type: Sequelize.BOOLEAN,
+            allowNull: false
         }
     })
     return AuctionModel;

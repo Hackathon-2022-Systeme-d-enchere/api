@@ -4,10 +4,6 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
             allowNull: false
         },
-        auctionIds: {
-            type: Sequelize.STRING,
-            allowNull: false
-        },
         image: {
             type: Sequelize.STRING
         },
