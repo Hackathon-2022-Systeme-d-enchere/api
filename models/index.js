@@ -3,6 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const Index = require('sequelize');
+const bcrypt = require("bcryptjs");
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/config.json')[env];
@@ -36,5 +37,11 @@ db.Sequelize = Index;
 db.Auction.hasMany(db.Bid)
 db.Auction.hasMany(db.Product)
 db.User.hasMany(db.Auction)
+
+
+db.User.beforeCreate(async (user, options) => {
+    const salt = bcrypt.genSaltSync(10);
+    user.password = bcrypt.hashSync(user.password, salt);
+})
 
 module.exports = db;

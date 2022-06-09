@@ -1,9 +1,11 @@
 var cors = require("cors");
 const express = require("express");
-const db = require("./model");
+const db = require("./models");
 const app = express();
+const bcrypt = require("bcryptjs");
 app.use(cors());
-const {Auction, Bid, Product} = require("./model/index");
+const {Auction, User, Bid, Product} = require("./models/index");
+const {createJWT} = require("./lib/security");
 const jwt_decode = require("jwt-decode");
 
 app.options('*', cors());
@@ -20,6 +22,46 @@ app.use(express.static("public"));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 db.sequelize.sync({force: false})
+
+app.post('/register', async (req, res) => {
+    const {username, role, password} = req.body;
+    const foundUser = await User.findOne({
+        where: {
+            "username": username,
+        }
+    });
+
+    if (!foundUser) {
+        const user = new User({
+            "username": username,
+            "role": role,
+            "password": password
+        });
+
+        user.save();
+        res.status(201).json('User created');
+    } else {
+        res.status(409).json({message: "User already exists!"});
+    }
+});
+
+app.post('/login', async (req, res) => {
+    const {username, password} = req.body;
+    const foundUser = await User.findOne({
+        where: {
+            "username": username,
+        }
+    });
+
+    if (!foundUser || !bcrypt.compareSync(password, foundUser.password)) {
+        return res.status(400).json({'message': 'Information invalides'});
+    } else {
+        createJWT({id: foundUser.username, roles: [foundUser.role]})
+            .then((token) =>
+                res.json({token: token})
+            );
+    }
+})
 
 io.on("connection", function (socket) {
 
