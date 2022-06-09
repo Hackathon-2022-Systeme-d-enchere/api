@@ -17,6 +17,10 @@ module.exports = (sequelize, Sequelize) => {
         isActive: {
             type: Sequelize.BOOLEAN,
             allowNull: false
+        },
+        roomId: {
+            type: Sequelize.STRING,
+            allowNull: false
         }
     })
     return AuctionModel;
