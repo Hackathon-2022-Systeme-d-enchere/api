@@ -6,7 +6,7 @@ const bcrypt = require("bcryptjs");
 const path = require('path');
 const fileUpload = require('express-fileupload');
 app.use(cors());
-const {Auction, User, Bid} = require("./models/index");
+const {Auction, User, Bid, Product} = require("./models/index");
 const {createJWT} = require("./lib/security");
 const jwt_decode = require("jwt-decode");
 
@@ -103,18 +103,68 @@ io.on("connection", function (socket) {
     socket.on("join", (data) => {
         let decoded = jwt_decode(data.userToken);
         console.log(decoded)
-        Bid.findAll({
+        Auction.findOne({
             where: {
-                userUID: decoded.uid
+                roomId: decoded.room
             }
-        }).then(bids => {
-            console.log(bids)
-            socket.emit("joined", {bids: bids});
+        }).then(auction => {
+            socket.emit("joined", {auction: auction});
+            Bid.findAll({
+                where: {
+                    userUID: decoded.user
+                }
+            }).then(bids => {
+                socket.emit("bids", {bids: bids});
+            })
+            Product.findAll(
+                {
+                    where: {
+                        AuctionId: auction.id,
+                        isSold: false
+                    }
+                }
+            ).then(productsForSale => {
+                socket.emit("products-for-sale", {products: productsForSale});
+            })
+
+            Product.findAll(
+                {
+                    where: {
+                        AuctionId: auction.id,
+                        isSold: true
+                    }
+                }
+            ).then(productsSold => {
+                socket.emit("products-sold", {products: productsSold});
+            })
+
+        }).catch(err => {
+            console.log(err);
         })
     })
 
-    socket.on("bid", (message) => {
-        console.log("bid", message);
+    socket.on("new-bid", (data) => {
+        let decoded = jwt_decode(data.userToken);
+        Auction.findOne({
+            where: {
+                roomId: decoded.room
+            }
+        }).then(auction => {
+            Bid.create({
+                userUID: decoded.user,
+                price: 120,
+                AuctionId: auction.id
+            }).then(bid => {
+                Bid.findAll({
+                    where: {
+                        userUID: decoded.user
+                    }
+                }).then(bids => {
+                    console.log(bids)
+                    socket.emit("bids", {bids: bids});
+                })
+            })
+        })
     })
 
     socket.on("disconnect", onDisconnect);
