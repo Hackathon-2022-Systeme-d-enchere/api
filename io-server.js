@@ -37,7 +37,9 @@ app.post('/register', async (req, res) => {
 
     if (!foundUser) {
         const user = new User({
-            "username": username, "role": role, "password": password
+            "username": username,
+            "role": role,
+            "password": password
         });
 
         user.save();

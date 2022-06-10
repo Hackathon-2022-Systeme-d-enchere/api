@@ -17,7 +17,8 @@ module.exports = (sequelize, Sequelize) => {
     // hash password before saving
     UserModel.beforeCreate((user, options) => {
         if (user.password) {
-            user.password = bcrypt.hashSync(user.password, 10);
+            const salt = bcrypt.genSaltSync(10);
+            user.password = bcrypt.hashSync(user.password, salt);
         }
     })
     return UserModel;
