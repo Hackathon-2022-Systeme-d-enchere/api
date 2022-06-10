@@ -1,5 +1,6 @@
 const {Product} = require("../models/index");
 const {validationResult} = require("express-validator");
+const path = require('path');
 
 exports.getAll = async (req, res) => {
     const products = await Product.findAll();
@@ -28,7 +29,7 @@ exports.create = async (req, res) => {
         return;
     }
 
-    uploadPath = __dirname + '/uploads/' + fileUpload.name;
+    uploadPath = './uploads/' + fileUpload.name;
 
     fileUpload.mv(uploadPath, function (err) {
         if (err) {
@@ -36,7 +37,10 @@ exports.create = async (req, res) => {
         }
 
         const product = new Product({
-            "name": name, "minPrice": minPrice, "isSold": isSold, "image": '/upload/' + fileUpload.name,
+            "name": name,
+            "minPrice": minPrice,
+            "isSold": isSold,
+            "image": '/upload/' + fileUpload.name,
         })
 
         product.save()
