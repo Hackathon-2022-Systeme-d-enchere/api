@@ -24,7 +24,7 @@ app.use(express.static("public"));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(fileUpload());
-db.sequelize.sync({force: false})
+db.sequelize.sync({alter: true})
 
 // ----- Security
 app.post('/register', securityController.register);
