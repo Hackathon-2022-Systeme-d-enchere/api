@@ -10,6 +10,8 @@ const {Auction, User, Bid, Product} = require("./models/index");
 const {createJWT} = require("./lib/security");
 const jwt_decode = require("jwt-decode");
 const {body, validationResult} = require('express-validator');
+const productController = require('./controllers/product.controller');
+const securityController = require('./controllers/security.controller');
 
 const PORT = process.env.PORT || 2000;
 
@@ -27,95 +29,15 @@ app.use(bodyParser.json());
 app.use(fileUpload());
 db.sequelize.sync({force: false})
 
-app.post('/register', async (req, res) => {
-    const {username, role, password} = req.body;
-    const foundUser = await User.findOne({
-        where: {
-            "username": username,
-        }
-    });
-
-    if (!foundUser) {
-        const user = new User({
-            "username": username,
-            "role": role,
-            "password": password
-        });
-
-        user.save();
-        res.status(201).json('User created');
-    } else {
-        res.status(409).json({message: "User already exists!"});
-    }
-});
-
-app.post('/login', async (req, res) => {
-    const {username, password} = req.body;
-    const foundUser = await User.findOne({
-        where: {
-            "username": username,
-        }
-    });
-
-    if (!foundUser || !bcrypt.compareSync(password, foundUser.password)) {
-        return res.status(400).json({'message': 'Information invalides'});
-    } else {
-        createJWT({id: foundUser.username, roles: [foundUser.role]})
-            .then((token) => res.json({token: token}));
-    }
-})
-
+// ----- Security
+app.post('/register', securityController.register);
+app.post('/login', securityController.login)
+// ----- Product
+app.post('/product', body('name').isString(), body('minPrice').isFloat(), body('isSold').isBoolean(), productController.create)
+app.get('/product', productController.getAll)
+// ----- Pages
 app.get('/admin', (req, res) => {
     res.sendFile(path.join(__dirname + '/admin.html'));
-})
-
-app.post('/product', body('name').isString(), body('minPrice').isFloat(), body('isSold').isBoolean(), async (req, res) => {
-    const {name, minPrice, isSold} = req.body;
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({errors: errors.array()});
-    }
-
-    let fileUpload;
-    let uploadPath;
-
-    if (!req.files || Object.keys(req.files).length === 0) {
-        res.status(400).send('No files were uploaded.');
-        return;
-    }
-
-    fileUpload = req.files.image;
-
-    if (!['image/png', 'image/jpeg'].includes(fileUpload.mimetype)) {
-        res.status(400).send('Invalid file extension.');
-        return;
-    }
-
-    uploadPath = __dirname + '/uploads/' + fileUpload.name;
-
-    fileUpload.mv(uploadPath, function (err) {
-        if (err) {
-            return res.status(500).send(err);
-        }
-
-        const product = new Product({
-            "name": name,
-            "minPrice": minPrice,
-            "isSold": isSold,
-            "image": '/upload/' + fileUpload.name,
-        })
-
-        product.save()
-            .then(res.status(201).json('Product created'))
-            .catch(e => {
-                res.status(500).json(e)
-            })
-    });
-})
-
-app.get('/product', async (req, res) => {
-    const products = await Product.findAll();
-    res.json(products)
 })
 
 io.on("connection", function (socket) {
