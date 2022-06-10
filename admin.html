@@ -338,7 +338,7 @@
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                         aria-label="Close"></button>
                                                 </div>
-                                                <form method="post" action="http://locahost:2000/product">
+                                                <form method="post" action="http://locahost:2000/auction">
                                                     <div class="modal-body">
                                                         <div>
                                                             <div class="mb-3">
@@ -407,22 +407,20 @@
                                         <th scope="col">name</th>
                                         <th scope="col">startAt</th>
                                         <th scope="col">endAt</th>
-                                        <th scope="col">owner</th>
                                         <th scope="col">image</th>
                                         <th scope="col">isActive</th>
                                         <th scope="col">roomId</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>1,001</td>
-                                        <td>random</td>
-                                        <td>data</td>
-                                        <td>placeholder</td>
-                                        <td>text</td>
-                                        <td>random</td>
-                                        <td>data</td>
-                                        <td>placeholder</td>
+                                    <tr v-for="auction in auctions">
+                                        <td>{{auction.id}}</td>
+                                        <td>{{auction.name}}</td>
+                                        <td>{{auction.startAt}}</td>
+                                        <td>{{auction.endAt}}</td>
+                                        <td>{{auction.image}}</td>
+                                        <td>{{auction.isActive}}</td>
+                                        <td>{{auction.roomId}}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -469,6 +467,12 @@
                 // }
                 axios.get("/product").then((response) => {
                     this.products = response.data
+                }).catch((error) => {
+                    console.log(error)
+                });
+
+                axios.get("/auction").then((response) => {
+                    this.auctions = response.data
                 }).catch((error) => {
                     console.log(error)
                 });
