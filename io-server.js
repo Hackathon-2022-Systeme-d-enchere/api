@@ -5,13 +5,11 @@ const app = express();
 const bcrypt = require("bcryptjs");
 const path = require('path');
 const fileUpload = require('express-fileupload');
-app.use(cors());
+const verifyAuthorization = require("./middlewares/verifyAuthorization");
 const {Auction, User, Bid, Product} = require("./models/index");
 const {createJWT} = require("./lib/security");
 const jwt_decode = require("jwt-decode");
 const {body, validationResult} = require('express-validator');
-
-app.options('*', cors());
 
 const PORT = process.env.PORT || 2000;
 
@@ -20,7 +18,9 @@ const http = require("http").Server(app);
 const io = require("socket.io")(http);
 
 app.set("port", PORT);
-
+app.options('*', cors());
+app.use(cors());
+// app.use(verifyAuthorization());
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
