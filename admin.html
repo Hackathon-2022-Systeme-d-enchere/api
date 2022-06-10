@@ -1,16 +1,22 @@
 <!doctype html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Bootstrap demo</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <meta name="theme-color" content="#712cf9">
 
     <style>
         body {
             font-size: .875rem;
+        }
+
+        .fade:not(.show) {
+            opacity: 0;
+            display: none !important;
         }
 
         .feather {
@@ -31,8 +37,10 @@
             bottom: 0;
             /* rtl:remove */
             left: 0;
-            z-index: 100; /* Behind the navbar */
-            padding: 48px 0 0; /* Height of navbar */
+            z-index: 100;
+            /* Behind the navbar */
+            padding: 48px 0 0;
+            /* Height of navbar */
             box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
         }
 
@@ -48,7 +56,8 @@
             height: calc(100vh - 48px);
             padding-top: .5rem;
             overflow-x: hidden;
-            overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+            overflow-y: auto;
+            /* Scrollable contents if viewport is shorter than content. */
         }
 
         .sidebar .nav-link {
@@ -61,9 +70,7 @@
             color: #727272;
         }
 
-        .sidebar .nav-link.active {
-            color: #2470dc;
-        }
+
 
         .sidebar .nav-link:hover .feather,
         .sidebar .nav-link.active .feather {
@@ -157,177 +164,285 @@
         }
     </style>
 </head>
+
 <body>
 
 
-<div id="app">
-    <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="#">WA Auction</a>
-        <button
-                class="navbar-toggler position-absolute d-md-none collapsed"
-                type="button" data-bs-toggle="collapse"
-                data-bs-target="#sidebarMenu"
-                aria-controls="sidebarMenu"
-                aria-expanded="false"
-                aria-label="Toggle navigation"
-                @click='toggleMenu'
-        >
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <br>
-        <input class="form-control form-control-dark w-100 rounded-0 border-0" type="text" placeholder="Search"
-               aria-label="Search">
-        <div class="navbar-nav">
-            <div class="nav-item text-nowrap">
-                <a class="nav-link px-3" href="#">Sign out</a>
+    <div id="app">
+        <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+            <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="#">WA Auction</a>
+            <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
+                aria-label="Toggle navigation" @click='toggleMenu'>
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <br>
+            <input class="form-control form-control-dark w-100 rounded-0 border-0" type="text" placeholder="Search"
+                aria-label="Search">
+            <div class="navbar-nav">
+                <div class="nav-item text-nowrap">
+                    <a class="nav-link px-3" href="#">Sign out</a>
+                </div>
             </div>
-        </div>
-    </header>
+        </header>
 
-    <div class="container-fluid">
-        <div class="row">
-            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse"
-                 v-bind:class="(showMenu)?'show':''">
-                <div class="position-sticky pt-3">
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">
-                                <span data-feather="home" class="align-text-bottom"></span>
-                                Dashboard
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span data-feather="file" class="align-text-bottom"></span>
-                                Orders
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span data-feather="shopping-cart" class="align-text-bottom"></span>
-                                Products
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span data-feather="users" class="align-text-bottom"></span>
-                                Customers
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span data-feather="bar-chart-2" class="align-text-bottom"></span>
-                                Reports
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span data-feather="layers" class="align-text-bottom"></span>
-                                Integrations
-                            </a>
-                        </li>
-                    </ul>
-
-                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase">
-                        <span>Saved reports</span>
-                        <a class="link-secondary" href="#" aria-label="Add a new report">
-                            <span data-feather="plus-circle" class="align-text-bottom"></span>
-                        </a>
-                    </h6>
-                    <ul class="nav flex-column mb-2">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span data-feather="file-text" class="align-text-bottom"></span>
-                                Current month
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span data-feather="file-text" class="align-text-bottom"></span>
-                                Last quarter
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span data-feather="file-text" class="align-text-bottom"></span>
-                                Social engagement
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span data-feather="file-text" class="align-text-bottom"></span>
-                                Year-end sale
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">Dashboard</h1>
-                    <div class="btn-toolbar mb-2 mb-md-0">
-                        <div class="btn-group me-2">
-                            <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-                            <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
-                        </div>
-                        <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-                            <span data-feather="calendar" class="align-text-bottom"></span>
-                            This week
-                        </button>
+        <div class="container-fluid">
+            <div class="row">
+                <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse"
+                    v-bind:class="(showMenu)?'show':''">
+                    <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist"
+                        aria-orientation="vertical">
+                        <button class="nav-link active" id="v-pills-product-tab" data-bs-toggle="pill"
+                            data-bs-target="#v-pills-product" type="button" role="tab" aria-controls="v-pills-product"
+                            aria-selected="true">Product</button>
+                        <button class="nav-link" id="v-pills-auction-tab" data-bs-toggle="pill"
+                            data-bs-target="#v-pills-auction" type="button" role="tab" aria-controls="v-pills-auction"
+                            aria-selected="false">Auction</button>
                     </div>
-                </div>
+                </nav>
 
-                <div class="table-responsive">
-                    <table class="table table-striped table-sm">
-                        <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Header</th>
-                            <th scope="col">Header</th>
-                            <th scope="col">Header</th>
-                            <th scope="col">Header</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>1,001</td>
-                            <td>random</td>
-                            <td>data</td>
-                            <td>placeholder</td>
-                            <td>text</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                    <div class="tab-content" id="v-pills-tabContent"></div>
+                    <!-- BEGIN PRODUCT TAB -->
+                    <div class="tab-pane fade show active" id="v-pills-product" role="tabpanel"
+                        aria-labelledby="v-pills-product-tab" tabindex="0">
+                        <div
+                            class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                            <h1 class="h2">Products</h1>
+                            <div class="btn-toolbar mb-2 mb-md-0">
+                                <div class="btn-group me-2">
+                                    <!-- Button trigger modal -->
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                        data-bs-target="#exampleModal">
+                                        Ajouter
+                                    </button>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="exampleModal" tabindex="-1"
+                                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Ajouter un Product
+                                                    </h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <form method="post" action="http://locahost:2000/product">
+                                                    <div class="modal-body">
+                                                        <div>
+                                                            <div class="mb-3">
+                                                                <label for="nameInput" class="form-label">Name</label>
+                                                                <input type="name" class="form-control" id="nameInput"
+                                                                    aria-describedby="nameHelp" name="name">
+
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="imageInput" class="form-label">Image</label>
+                                                                <input name="image" type="file" class="form-control"
+                                                                    id="imageInput">
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="minPriceInput" class="form-label">Min
+                                                                    Price</label>
+                                                                <input type="number" name="minPrice"
+                                                                    class="form-control" id="minPriceInput">
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" name="isSold"
+                                                                    type="checkbox" value="" readonly id="isSoldInput">
+                                                                <label class="form-check-label" for="isSoldInput">
+                                                                    Is Sold
+                                                                </label>
+                                                            </div>
+
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">Close</button>
+                                                        <button type="button" class="btn btn-primary"
+                                                            @click="sendProduct">Ajouter</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-striped table-sm">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">id</th>
+                                        <th scope="col">name</th>
+                                        <th scope="col">image</th>
+                                        <th scope="col">minPrice</th>
+                                        <th scope="col">isSold</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1,001</td>
+                                        <td>random</td>
+                                        <td>data</td>
+                                        <td>placeholder</td>
+                                        <td>text</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- END PRODUCT TAB -->
+
+                    <!-- BEGIN AUCTION TAB -->
+                    <div class="tab-pane fade" id="v-pills-auction" role="tabpanel"
+                        aria-labelledby="v-pills-auction-tab" tabindex="0">
+                        <div
+                            class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                            <h1 class="h2">Auction</h1>
+                            <div class="btn-toolbar mb-2 mb-md-0">
+                                <div class="btn-group me-2">
+                                    <!-- Button trigger modal -->
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                        data-bs-target="#exampleModal">
+                                        Ajouter
+                                    </button>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="exampleModal" tabindex="-1"
+                                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Ajouter une enchère
+                                                    </h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <form method="post" action="http://locahost:2000/product">
+                                                    <div class="modal-body">
+                                                        <div>
+                                                            <div class="mb-3">
+                                                                <label for="nameInput" class="form-label">Name</label>
+                                                                <input type="name" class="form-control" id="nameInput"
+                                                                    aria-describedby="nameHelp" name="name">
+
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="imageInput" class="form-label">Image</label>
+                                                                <input name="image" type="file" class="form-control"
+                                                                    id="imageInput">
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="minPriceInput" class="form-label">Min
+                                                                    Price</label>
+                                                                <input type="number" name="minPrice"
+                                                                    class="form-control" id="minPriceInput">
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" name="isSold"
+                                                                    type="checkbox" value="" readonly id="isSoldInput">
+                                                                <label class="form-check-label" for="isSoldInput">
+                                                                    Is Sold
+                                                                </label>
+                                                            </div>
+
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">Close</button>
+                                                        <button type="button" class="btn btn-primary"
+                                                            @click="sendProduct">Ajouter</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-striped table-sm">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">id</th>
+                                        <th scope="col">name</th>
+                                        <th scope="col">image</th>
+                                        <th scope="col">minPrice</th>
+                                        <th scope="col">isSold</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1,001</td>
+                                        <td>random</td>
+                                        <td>data</td>
+                                        <td>placeholder</td>
+                                        <td>text</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- END AUCTION TAB -->
+            </div>
             </main>
         </div>
     </div>
-</div>
+    </div>
 
-<script src="https://unpkg.com/vue@3"></script>
-<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
-<script src="https://unpkg.com/feather-icons"></script>
-<script>
-    feather.replace()
-</script>
-<script>
-    const {createApp} = Vue
+    <script src="https://unpkg.com/vue@3"></script>
+    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
-    createApp({
-        data() {
-            return {
-                showMenu: false
-            }
-        },
-        methods: {
-            toggleMenu: function (e) {
-                this.showMenu = !this.showMenu;
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <script>
+        feather.replace()
+    </script>
+    <script>
+        const { createApp } = Vue
+
+
+        createApp({
+            data() {
+                return {
+                    products: [],
+                    showMenu: false
+                }
             },
-        }
-    }).mount('#app')
-</script>
+            created() {
+                // for (let i = 0; i < 20; i++) {
+                //     this.products.push({ i, "name"+i), ("image" + i),})
+                // }
+                axios.get("/products").then((value) => {
+
+                }).catch((error) => {
+                    console.log(error)
+                });
+            },
+            methods: {
+                toggleMenu: function (e) {
+                    this.showMenu = !this.showMenu;
+                },
+                sendProduct: function (e) {
+                    console.log("send product")
+                }
+            }
+        }).mount('#app')
+    </script>
 
 
 </body>
+
 </html>
