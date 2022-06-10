@@ -111,6 +111,11 @@ app.post('/product', body('name').isString(), body('minPrice').isFloat(), body('
     });
 })
 
+app.get('/product', async (req, res) => {
+    const products = await Product.findAll();
+    res.json(products)
+})
+
 io.on("connection", function (socket) {
 
     socket.on("join", (data) => {
