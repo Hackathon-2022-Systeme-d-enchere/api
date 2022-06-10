@@ -5,6 +5,7 @@
 # Hackathon ESGI/ECITV The Real Final Destination
 
 Subject: Auction feature on WA
+
 Authors: Group4 - HARAULT Valentin, LY Céline, PIEDAGNEL Bérenger, BARBE Dylan, COHEN Jérémie
 
 ## Problem
