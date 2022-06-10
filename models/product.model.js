@@ -12,6 +12,9 @@ module.exports = (sequelize, Sequelize) => {
         },
         isSold: {
             type: Sequelize.BOOLEAN
+        },
+        soldPrice: {
+            type: Sequelize.DOUBLE
         }
     })
     return ProductModel;

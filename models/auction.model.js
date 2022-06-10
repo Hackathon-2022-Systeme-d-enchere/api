@@ -10,10 +10,6 @@ module.exports = (sequelize, Sequelize) => {
         endAt: {
             type: Sequelize.DATE
         },
-        owner: {
-            type: Sequelize.STRING,
-            allowNull: false
-        },
         image: {
             type: Sequelize.STRING,
         },
