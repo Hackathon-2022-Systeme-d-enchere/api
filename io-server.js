@@ -2,13 +2,13 @@ var cors = require("cors");
 const express = require("express");
 const db = require("./models");
 const app = express();
-const bcrypt = require("bcryptjs");
-app.use(cors());
+const path = require('path');
+const fileUpload = require('express-fileupload');
 const {Auction, User, Bid, Product} = require("./models/index");
-const {createJWT} = require("./lib/security");
 const jwt_decode = require("jwt-decode");
-
-app.options('*', cors());
+const {body} = require('express-validator');
+const productController = require('./controllers/product.controller');
+const securityController = require('./controllers/security.controller');
 
 const PORT = process.env.PORT || 2000;
 
@@ -17,52 +17,27 @@ const http = require("http").Server(app);
 const io = require("socket.io")(http);
 
 app.set("port", PORT);
-
+app.options('*', cors());
+app.use(cors());
+// app.use(verifyAuthorization());
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
+app.use(fileUpload());
 db.sequelize.sync({force: false})
 
-app.post('/register', async (req, res) => {
-    const {username, role, password} = req.body;
-    const foundUser = await User.findOne({
-        where: {
-            "username": username,
-        }
-    });
-
-    if (!foundUser) {
-        const user = new User({
-            "username": username,
-            "role": role,
-            "password": password
-        });
-
-        user.save();
-        res.status(201).json('User created');
-    } else {
-        res.status(409).json({message: "User already exists!"});
-    }
-});
-
-app.post('/login', async (req, res) => {
-    const {username, password} = req.body;
-    const foundUser = await User.findOne({
-        where: {
-            "username": username,
-        }
-    });
-
-    if (!foundUser || !bcrypt.compareSync(password, foundUser.password)) {
-        return res.status(400).json({'message': 'Information invalides'});
-    } else {
-        createJWT({id: foundUser.username, roles: [foundUser.role]})
-            .then((token) =>
-                res.json({token: token})
-            );
-    }
+// ----- Security
+app.post('/register', securityController.register);
+app.post('/login', securityController.login)
+// ----- Product
+app.post('/product', body('name').isString(), body('minPrice').isFloat(), body('isSold').isBoolean(), productController.create)
+app.get('/product', productController.getAll)
+// ----- Pages
+app.get('/admin', (req, res) => {
+    res.sendFile(path.join(__dirname + '/admin.html'));
 })
 
+// ----- Socket.IO
 io.on("connection", function (socket) {
 
     const roomId = socket.handshake.query.zoneId;
