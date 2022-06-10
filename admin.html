@@ -286,12 +286,12 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>1,001</td>
-                                        <td>random</td>
-                                        <td>data</td>
-                                        <td>placeholder</td>
-                                        <td>text</td>
+                                    <tr v-for="product in products" >
+                                        <td>{{product.id}}</td>
+                                        <td>{{product.name}}</td>
+                                        <td>{{product.image}}</td>
+                                        <td>{{product.minPrice}}</td>
+                                        <td>{{product.isSold}}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -425,8 +425,8 @@
                 // for (let i = 0; i < 20; i++) {
                 //     this.products.push({ i, "name"+i), ("image" + i),})
                 // }
-                axios.get("/products").then((value) => {
-
+                axios.get("/product").then((response) => {
+                    this.products = response.data
                 }).catch((error) => {
                     console.log(error)
                 });
