@@ -7,6 +7,9 @@
     <title>Bootstrap demo</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+        integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <meta name="theme-color" content="#712cf9">
 
     <style>
@@ -194,10 +197,16 @@
                         aria-orientation="vertical">
                         <button class="nav-link active" id="v-pills-product-tab" data-bs-toggle="pill"
                             data-bs-target="#v-pills-product" type="button" role="tab" aria-controls="v-pills-product"
-                            aria-selected="true">Product</button>
+                            aria-selected="true">
+                            <div class="mr-5"> <i class="fa-solid fa-baseball"></i></div>
+
+                            Product
+                        </button>
                         <button class="nav-link" id="v-pills-auction-tab" data-bs-toggle="pill"
                             data-bs-target="#v-pills-auction" type="button" role="tab" aria-controls="v-pills-auction"
-                            aria-selected="false">Auction</button>
+                            aria-selected="false">
+                            <div class="mr-5"><i class="fa-solid fa-gavel"></i></div>Auction
+                        </button>
                     </div>
                 </nav>
 
@@ -228,29 +237,34 @@
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                         aria-label="Close"></button>
                                                 </div>
-                                                <form method="post" action="http://locahost:2000/product">
+                                                <form>
                                                     <div class="modal-body">
                                                         <div>
                                                             <div class="mb-3">
                                                                 <label for="nameInput" class="form-label">Name</label>
                                                                 <input type="name" class="form-control" id="nameInput"
-                                                                    aria-describedby="nameHelp" name="name">
+                                                                    aria-describedby="nameHelp" name="name"
+                                                                    v-model="nameP">
 
                                                             </div>
                                                             <div class="mb-3">
                                                                 <label for="imageInput" class="form-label">Image</label>
                                                                 <input name="image" type="file" class="form-control"
-                                                                    id="imageInput">
+                                                                    id="imageInput" v-model="imageP"
+                                                                    @change="imageChange($event, $event.target.files)"
+                                                                    accept="image/*">
                                                             </div>
                                                             <div class="mb-3">
                                                                 <label for="minPriceInput" class="form-label">Min
                                                                     Price</label>
                                                                 <input type="number" name="minPrice"
-                                                                    class="form-control" id="minPriceInput">
+                                                                    class="form-control" id="minPriceInput"
+                                                                    v-model="minPriceP">
                                                             </div>
                                                             <div class="form-check">
                                                                 <input class="form-check-input" name="isSold"
-                                                                    type="checkbox" value="" readonly id="isSoldInput">
+                                                                    type="checkbox" value="" readonly id="isSoldInput"
+                                                                    v-model="isSoldP">
                                                                 <label class="form-check-label" for="isSoldInput">
                                                                     Is Sold
                                                                 </label>
@@ -309,49 +323,65 @@
                                 <div class="btn-group me-2">
                                     <!-- Button trigger modal -->
                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                        data-bs-target="#exampleModal">
+                                        data-bs-target="#auctionModal">
                                         Ajouter
                                     </button>
 
                                     <!-- Modal -->
-                                    <div class="modal fade" id="exampleModal" tabindex="-1"
-                                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal fade" id="auctionModal" tabindex="-1"
+                                        aria-labelledby="auctionModalLabel" aria-hidden="true">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">Ajouter une enchère
+                                                    <h5 class="modal-title" id="auctionModalLabel">Ajouter une enchère
                                                     </h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                         aria-label="Close"></button>
                                                 </div>
-                                                <form method="post" action="http://locahost:2000/product">
+                                                <form method="post" action="http://locahost:2000/auction">
                                                     <div class="modal-body">
                                                         <div>
                                                             <div class="mb-3">
                                                                 <label for="nameInput" class="form-label">Name</label>
                                                                 <input type="name" class="form-control" id="nameInput"
                                                                     aria-describedby="nameHelp" name="name">
-
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="startAt" class="form-label">Start At</label>
+                                                                <input type="startAt" class="form-control"
+                                                                    id="startAtInput" aria-describedby="startAtHelp"
+                                                                    name="startAt">
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="endAt" class="form-label">End At</label>
+                                                                <input type="endAt" class="form-control" id="endAtInput"
+                                                                    aria-describedby="endAtAtHelp" name="endAttAt">
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="ownerInput" class="form-label">Owner</label>
+                                                                <input type="owner" class="form-control" id="ownerInput"
+                                                                    aria-describedby="ownerHelp" name="owner">
                                                             </div>
                                                             <div class="mb-3">
                                                                 <label for="imageInput" class="form-label">Image</label>
                                                                 <input name="image" type="file" class="form-control"
                                                                     id="imageInput">
                                                             </div>
-                                                            <div class="mb-3">
-                                                                <label for="minPriceInput" class="form-label">Min
-                                                                    Price</label>
-                                                                <input type="number" name="minPrice"
-                                                                    class="form-control" id="minPriceInput">
-                                                            </div>
                                                             <div class="form-check">
-                                                                <input class="form-check-input" name="isSold"
-                                                                    type="checkbox" value="" readonly id="isSoldInput">
-                                                                <label class="form-check-label" for="isSoldInput">
-                                                                    Is Sold
+                                                                <input class="form-check-input" name="isActive"
+                                                                    type="checkbox" value="" readonly
+                                                                    id="isActiveInput">
+                                                                <label class="form-check-label" for="isActiveInput">
+                                                                    Is Active
                                                                 </label>
                                                             </div>
-
+                                                            <div class="mb-3">
+                                                                <label for="roomIdInput"
+                                                                    class="form-label">roomId</label>
+                                                                <input type="roomId" class="form-control"
+                                                                    id="roomIdInput" aria-describedby="roomIdHelp"
+                                                                    name="roomId">
+                                                            </div>
 
                                                         </div>
                                                     </div>
@@ -375,18 +405,22 @@
                                     <tr>
                                         <th scope="col">id</th>
                                         <th scope="col">name</th>
+                                        <th scope="col">startAt</th>
+                                        <th scope="col">endAt</th>
                                         <th scope="col">image</th>
-                                        <th scope="col">minPrice</th>
-                                        <th scope="col">isSold</th>
+                                        <th scope="col">isActive</th>
+                                        <th scope="col">roomId</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>1,001</td>
-                                        <td>random</td>
-                                        <td>data</td>
-                                        <td>placeholder</td>
-                                        <td>text</td>
+                                    <tr v-for="auction in auctions">
+                                        <td>{{auction.id}}</td>
+                                        <td>{{auction.name}}</td>
+                                        <td>{{auction.startAt}}</td>
+                                        <td>{{auction.endAt}}</td>
+                                        <td>{{auction.image}}</td>
+                                        <td>{{auction.isActive}}</td>
+                                        <td>{{auction.roomId}}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -414,11 +448,17 @@
         const { createApp } = Vue
 
 
+
         createApp({
             data() {
                 return {
                     products: [],
-                    showMenu: false
+                    showMenu: false,
+                    idP: null,
+                    nameP: null,
+                    imageP: null,
+                    minPriceP: null,
+                    isSoldP: null
                 }
             },
             created() {
@@ -430,13 +470,35 @@
                 }).catch((error) => {
                     console.log(error)
                 });
+
+                axios.get("/auction").then((response) => {
+                    this.auctions = response.data
+                }).catch((error) => {
+                    console.log(error)
+                });
             },
             methods: {
                 toggleMenu: function (e) {
                     this.showMenu = !this.showMenu;
                 },
                 sendProduct: function (e) {
+                    console.log("file", this.imageP)
+                    axios.post("/product", { name: this.nameP, image: this.imageP, minPrice: this.minPriceP, isSold: this.isSoldP }).then((val) => {
+                        console.log(val)
+                    }).catch((error) => {
+                        console.log(error)
+                    })
                     console.log("send product")
+                },
+                imageChange: function (arg, files) {
+                    console.log("arg", arg)
+                    for (let file in files) {
+                        console.log(file)
+                    }
+
+                    console.log("test", files)
+                    this.fileP = files;
+
                 }
             }
         }).mount('#app')
