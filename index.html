@@ -10,6 +10,7 @@
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
     <link rel="stylesheet" id="css-main" href="public/assets/css/dashmix.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 </head>
 <body>
 <div id="page-container" class="sidebar-mini side-scroll">
@@ -26,31 +27,34 @@
                 </div>
             </div>
         </div>
-
-
         <div class="bg-body-extra-light">
             <div class="content py-0">
                 <ul class="nav nav-tabs nav-tabs-alt border-bottom-0 justify-content-center">
                     <li class="nav-item">
-                        <a class="nav-link text-body-color py-4 active" href="">
-                            <i class="fa fa-rocket fa-fw opacity-50"></i> <span class="d-none d-md-inline ms-1">Products sold</span> <span class="nav-main-link-badge badge rounded-pill bg-warning">{{ productsSold.length }}</span>
+                        <a class="nav-link text-body-color py-4" id="tab-productsSold"
+                           v-on:click="openTab('productsSold')">
+                            <i class="fa fa-rocket fa-fw opacity-50"></i> <span class="d-none d-md-inline ms-1">Products sold </span>
+                            <span class="nav-main-link-badge badge rounded-pill bg-warning">{{ productsSold.length }}</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-body-color py-4" href="">
+                        <a class="nav-link text-body-color py-4 active" id="tab-activeSale"
+                           v-on:click="openTab('activeSale')">
                             <i class="fa fa-arrows-alt-h fa-fw opacity-50"></i> <span class="d-none d-md-inline ms-1">Sale in progress</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-body-color py-4" href="">
-                            <i class="fa fa-wallet fa-fw opacity-50"></i> <span class="d-none d-md-inline ms-1">Products for sale</span> <span class="nav-main-link-badge badge rounded-pill bg-primary">{{ productsForSale.length }}</span>
+                        <a class="nav-link text-body-color py-4" id="tab-productsForSale"
+                           v-on:click="openTab('productsForSale')">
+                            <i class="fa fa-wallet fa-fw opacity-50"></i> <span class="d-none d-md-inline ms-1">Products for sale </span>
+                            <span class="nav-main-link-badge badge rounded-pill bg-primary">{{ productsForSale.length }}</span>
                         </a>
                     </li>
                 </ul>
             </div>
         </div>
 
-        <div class="content" id="productsSold">
+        <div class="content d-none" id="productsSold">
             <div class="row">
                 <div class="col-md-6 col-xl-4" v-for="product in productsSold" :key="product.id">
                     <!-- House -->
@@ -64,7 +68,7 @@
                         <div class="block-content">
                             <h4 class="h6 mb-2">{{ product.name }}</h4>
                             <h5 class="h2 fw-light push">
-                                {{ product.minPrice }}€ <span class="fs-3 text-muted">start price</span>
+                                {{ product.soldPrice }}€ <span class="fs-3 text-muted">sold price</span>
                             </h5>
                         </div>
                         <div class="block-content p-0">
@@ -100,53 +104,83 @@
 
         <div class="content" id="activeSale">
             <div class="row">
-<!--                <div class="col-md-6 col-xl-4" v-for="product in activeProduct" :key="product.id">-->
-<!--                    &lt;!&ndash; House &ndash;&gt;-->
-<!--                    <div class="block block-rounded">-->
-<!--                        <div class="block-content p-0 overflow-hidden">-->
-<!--                            <a class="img-link img-fluid-100" data-toggle="layout" data-action="side_overlay_open"-->
-<!--                               href="javascript:void(0)">-->
-<!--                                <img class="img-fluid rounded-top" :src="product.image" alt="">-->
-<!--                            </a>-->
-<!--                        </div>-->
-<!--                        <div class="block-content">-->
-<!--                            <h4 class="h6 mb-2">{{ product.name }}</h4>-->
-<!--                            <h5 class="h2 fw-light push">-->
-<!--                                {{ product.minPrice }}€ <span class="fs-3 text-muted">start price</span>-->
-<!--                            </h5>-->
-<!--                        </div>-->
-<!--                        <div class="block-content p-0">-->
-<!--                            <div class="row text-center m-0 border-top border-bottom bg-body-light">-->
-<!--                                <div class="col-6 border-end">-->
-<!--                                    <p class="py-3 mb-0">-->
-<!--                                        <i class="fa fa-fw fa-clock text-muted me-1"></i> <strong>12:00</strong>-->
-<!--                                    </p>-->
-<!--                                </div>-->
-<!--                                <div class="col-6">-->
-<!--                                    <p class="py-3 mb-0">-->
-<!--                                        <i class="fa fa-fw fa-dollar text-muted me-1"></i> <strong>2$</strong> minimum-->
-<!--                                        bid-->
-<!--                                    </p>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <div class="block-content block-content-full">-->
-<!--                            <div class="row">-->
-<!--                                <div class="col-12">-->
-<!--                                    <a class="btn btn-sm btn-alt-primary w-100" data-toggle="layout"-->
-<!--                                       data-action="side_overlay_open" href="javascript:void(0)">-->
-<!--                                        View-->
-<!--                                    </a>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    &lt;!&ndash; END House &ndash;&gt;-->
-<!--                </div>-->
+                <div class="col-xl-6">
+                    <div class="block block-rounded">
+                        <div class="block-content p-0 overflow-hidden">
+                            <div class="row g-0">
+                                <div class="col-md-4 col-lg-5 overflow-hidden d-flex align-items-center">
+                                    <a href="">
+                                        <img class="img-fluid img-link" :src="activeProduct.image" alt="">
+                                    </a>
+                                </div>
+                                <div class="col-md-8 col-lg-7 d-flex align-items-center">
+                                    <div class="px-4 py-3">
+                                        <h4 class="mb-1">
+                                            <a class="text-dark" href="">{{ activeProduct.name }}</a>
+                                        </h4>
+                                        <h5 class="h5 fw-light push">
+                                            Starting at <span class="badge bg-dark">{{ activeProduct.minPrice }}€</span>
+                                        </h5>
+                                        <h5 class="h5 fw-light push">
+                                            Highest bid <span class="badge bg-info">{{ activeProduct.highhestBid }}€</span>
+                                        </h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-6">
+                    <div class="block block-rounded">
+                        <div class="block-content">
+                            <div class="row justify-content-center py-sm-3 py-md-5">
+                                <div class="col-sm-10 col-md-8">
+                                        <div class="mb-4">
+                                            <label class="form-label" for="user_bid">Your bid</label>
+                                            <input required type="text" class="form-control" id="user_bid" placeholder="100">
+                                        </div>
+                                        <input type="hidden" :value="activeProduct.id" class="form-control" id="product_id">
+                                        <button class="w-100 btn btn-success" v-on:click="sendBid">Place your bid</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-12">
+                    <div class="block block-rounded">
+                        <div class="block-header block-header-default">
+                            <h3 class="block-title">Last Bids</h3>
+                        </div>
+                        <div class="block-content">
+                            <table class="table table-vcenter">
+                                <thead>
+                                <tr class="bg-body-dark">
+                                    <th class="text-center" style="width: 50px;">#</th>
+                                    <th>Name</th>
+                                    <th class="d-none d-sm-table-cell" style="width: 15%;">Bids</th>
+                                </tr>
+                                </thead>
+                                <tbody v-for="bid in activeProduct.bids" :key="bid.id">
+                                <tr>
+                                    <th class="text-center" scope="row">{{bid.id}}</th>
+                                    <td class="fw-semibold">
+                                        <a href="">{{bid.userUID}}</a>
+                                    </td>
+                                    <td class="d-none d-sm-table-cell">
+                                        <span class="badge bg-success">{{ bid.price }}€</span>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="content" id="productsForSale">
+        <div class="content d-none" id="productsForSale">
             <div class="row">
                 <div class="col-md-6 col-xl-4" v-for="product in productsForSale" :key="product.id">
                     <!-- House -->
@@ -203,6 +237,7 @@
 <script src="public/assets/js/plugins/slick-carousel/slick.min.js"></script>
 <script src="https://unpkg.com/vue@3"></script>
 <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 <script>Dashmix.helpersOnLoad(['jq-datepicker', 'jq-rangeslider', 'jq-slick']);</script>
 <script>
@@ -225,12 +260,17 @@
                     name: null,
                     minPrice: null,
                     image: null,
-                    bids: []
+                    bids: [],
+                    highhestBid: null,
                 }
             }
         },
         mounted() {
-            socket = io.connect('http://localhost:2000/');
+            socket = io.connect('http://localhost:2000/', {
+                query: {
+                    id: '12'
+                }
+            });
             socket.on('joined', (data) => {
                 this.onJoin(data)
             });
@@ -246,22 +286,46 @@
             socket.on('products-for-sale', (data) => {
                 this.getProductsForSale(data)
             });
-            // socket.on('active-product', (data) => {
-            //     this.getActiveProduct(data)
-            // });
+            socket.on('active-product', (data) => {
+                this.getActiveProduct(data)
+            });
         },
         methods: {
+            openTab(tab) {
+                // remove class
+                document.getElementById('productsSold').classList.add('d-none');
+                document.getElementById('activeSale').classList.add('d-none');
+                document.getElementById('productsForSale').classList.add('d-none');
+                document.getElementById('tab-productsSold').classList.remove('active');
+                document.getElementById('tab-activeSale').classList.remove('active');
+                document.getElementById('tab-productsForSale').classList.remove('active');
+                document.getElementById(tab).classList.remove('d-none');
+                document.getElementById(tab).classList.add('d-block');
+                document.getElementById('tab-' + tab).classList.add('active');
+            },
             onJoin(data) {
                 this.auction = data.auction
             },
             sendBid() {
+                if (this.activeProduct.bids.length > 0) {
+                    if (document.getElementById('user_bid').value !== "") {
+                        if (this.activeProduct.bids[0].price >= document.getElementById('user_bid').value) {
+                            toastr.error('Your bid must be higher than the current bid')
+                            return
+                        }
+                    } else {
+                        toastr.error('You must enter a bid')
+                        return
+                    }
+                }
                 socket.emit('new-bid', {
-                    bid: document.getElementById("bid_amount").value,
-                    userToken: this.userToken
+                    bid: document.getElementById('user_bid').value,
+                    userToken: this.userToken,
+                    productId: document.getElementById('product_id').value
                 });
             },
             getBIds(data) {
-                this.bids = data.bids
+                this.activeProduct.bids = data.bids
             },
             getProductsSold(data) {
                 this.productsSold = data.products
@@ -271,6 +335,8 @@
             },
             getActiveProduct(data) {
                 this.activeProduct = data.product
+                this.activeProduct.bids = data.product.Bids
+                this.activeProduct.highhestBid = data.product.Bids[0].price
             }
         }
     }).mount('#page-container')

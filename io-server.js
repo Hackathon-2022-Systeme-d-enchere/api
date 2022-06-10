@@ -63,24 +63,22 @@ app.post('/login', async (req, res) => {
     }
 })
 
+
 io.on("connection", function (socket) {
+
+    const roomId = socket.handshake.query.id;
+
+    socket.join(roomId);
 
     socket.on("join", (data) => {
         let decoded = jwt_decode(data.userToken);
-        console.log(decoded)
         Auction.findOne({
             where: {
                 roomId: decoded.room
             }
         }).then(auction => {
-            socket.emit("joined", {auction: auction});
-            Bid.findAll({
-                where: {
-                    userUID: decoded.user
-                }
-            }).then(bids => {
-                socket.emit("bids", {bids: bids});
-            })
+            io.to(roomId).emit("joined", {auction: auction});
+
             Product.findAll(
                 {
                     where: {
@@ -89,7 +87,7 @@ io.on("connection", function (socket) {
                     }
                 }
             ).then(productsForSale => {
-                socket.emit("products-for-sale", {products: productsForSale});
+                io.to(roomId).emit("products-for-sale", {products: productsForSale});
             })
 
             Product.findAll(
@@ -100,7 +98,22 @@ io.on("connection", function (socket) {
                     }
                 }
             ).then(productsSold => {
-                socket.emit("products-sold", {products: productsSold});
+                io.to(roomId).emit("products-sold", {products: productsSold});
+            })
+
+            Product.findOne({
+                where: {
+                    AuctionId: auction.id,
+                    isSold: false
+                },
+                include: [{
+                    model: Bid
+                }],
+                order: [
+                    [Bid, "price", "DESC"]
+                ]
+            }).then(product => {
+                io.to(roomId).emit("active-product", {product: product});
             })
 
         }).catch(err => {
@@ -114,19 +127,26 @@ io.on("connection", function (socket) {
             where: {
                 roomId: decoded.room
             }
-        }).then(auction => {
-            Bid.create({
-                userUID: decoded.user,
-                price: 120,
-                AuctionId: auction.id
-            }).then(bid => {
-                Bid.findAll({
-                    where: {
-                        userUID: decoded.user
-                    }
-                }).then(bids => {
-                    console.log(bids)
-                    socket.emit("bids", {bids: bids});
+        }).then(() => {
+            Product.findByPk(data.productId).then(product => {
+                Bid.create({
+                    userUID: decoded.user,
+                    price: data.bid,
+                    ProductId: product.id
+                }).then(() => {
+                    Product.findOne({
+                        where: {
+                            id: product.id
+                        },
+                        include: [{
+                            model: Bid
+                        }],
+                        order: [
+                            [Bid, "price", "DESC"]
+                        ]
+                    }).then(product => {
+                        io.to(roomId).emit("active-product", {product: product});
+                    })
                 })
             })
         })
