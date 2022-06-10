@@ -6,7 +6,7 @@
 
 Subject: Auction feature on WA
 
-Authors: Group4 - HARAULT Valentin, LY Céline, PIEDAGNEL Bérenger, BARBE Dylan, COHEN Jérémie
+Authors: Group4 - LEMOINE Thomas, HARAULT Valentin, LY Céline, PIEDAGNEL Bérenger, BARBE Dylan, COHEN Jérémie
 
 ## Problem
 The idea we present is to create an auction feature on WorkAdventure.
