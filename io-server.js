@@ -80,9 +80,8 @@ app.post('/auction', async (req, res) => {
     }
 
     fileUpload = req.files.image;
-    console.log(fileUpload)
 
-    if (!['image/png', 'image/jpeg'].includes(req.files.mimetype)) {
+    if (!['image/png', 'image/jpeg'].includes(fileUpload.mimetype)) {
         res.status(400).send('Invalid file extension.');
         return;
     }
