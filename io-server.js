@@ -63,10 +63,9 @@ app.post('/login', async (req, res) => {
     }
 })
 
-
 io.on("connection", function (socket) {
 
-    const roomId = socket.handshake.query.id;
+    const roomId = socket.handshake.query.zoneId;
 
     socket.join(roomId);
 
@@ -74,7 +73,7 @@ io.on("connection", function (socket) {
         let decoded = jwt_decode(data.userToken);
         Auction.findOne({
             where: {
-                roomId: decoded.room
+                roomId: decoded.room + roomId
             }
         }).then(auction => {
             io.to(roomId).emit("joined", {auction: auction});
@@ -125,7 +124,7 @@ io.on("connection", function (socket) {
         let decoded = jwt_decode(data.userToken);
         Auction.findOne({
             where: {
-                roomId: decoded.room
+                roomId: decoded.room + roomId
             }
         }).then(() => {
             Product.findByPk(data.productId).then(product => {
