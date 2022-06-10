@@ -9,6 +9,7 @@ app.use(cors());
 const {Auction, User, Bid, Product} = require("./models/index");
 const {createJWT} = require("./lib/security");
 const jwt_decode = require("jwt-decode");
+const {body, validationResult} = require('express-validator');
 
 app.options('*', cors());
 
@@ -36,9 +37,7 @@ app.post('/register', async (req, res) => {
 
     if (!foundUser) {
         const user = new User({
-            "username": username,
-            "role": role,
-            "password": password
+            "username": username, "role": role, "password": password
         });
 
         user.save();
@@ -60,9 +59,7 @@ app.post('/login', async (req, res) => {
         return res.status(400).json({'message': 'Information invalides'});
     } else {
         createJWT({id: foundUser.username, roles: [foundUser.role]})
-            .then((token) =>
-                res.json({token: token})
-            );
+            .then((token) => res.json({token: token}));
     }
 })
 
@@ -70,7 +67,13 @@ app.get('/admin', (req, res) => {
     res.sendFile(path.join(__dirname + '/admin.html'));
 })
 
-app.post('/auction', async (req, res) => {
+app.post('/product', body('name').isString(), body('minPrice').isFloat(), body('isSold').isBoolean(), async (req, res) => {
+    const {name, minPrice, isSold} = req.body;
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({errors: errors.array()});
+    }
+
     let fileUpload;
     let uploadPath;
 
@@ -93,7 +96,18 @@ app.post('/auction', async (req, res) => {
             return res.status(500).send(err);
         }
 
-        res.send('File uploaded to ' + uploadPath);
+        const product = new Product({
+            "name": name,
+            "minPrice": minPrice,
+            "isSold": isSold,
+            "image": '/upload/' + fileUpload.name,
+        })
+
+        product.save()
+            .then(res.status(201).json('Product created'))
+            .catch(e => {
+                res.status(500).json(e)
+            })
     });
 })
 
@@ -115,25 +129,19 @@ io.on("connection", function (socket) {
             }).then(bids => {
                 socket.emit("bids", {bids: bids});
             })
-            Product.findAll(
-                {
-                    where: {
-                        AuctionId: auction.id,
-                        isSold: false
-                    }
+            Product.findAll({
+                where: {
+                    AuctionId: auction.id, isSold: false
                 }
-            ).then(productsForSale => {
+            }).then(productsForSale => {
                 socket.emit("products-for-sale", {products: productsForSale});
             })
 
-            Product.findAll(
-                {
-                    where: {
-                        AuctionId: auction.id,
-                        isSold: true
-                    }
+            Product.findAll({
+                where: {
+                    AuctionId: auction.id, isSold: true
                 }
-            ).then(productsSold => {
+            }).then(productsSold => {
                 socket.emit("products-sold", {products: productsSold});
             })
 
@@ -150,9 +158,7 @@ io.on("connection", function (socket) {
             }
         }).then(auction => {
             Bid.create({
-                userUID: decoded.user,
-                price: 120,
-                AuctionId: auction.id
+                userUID: decoded.user, price: 120, AuctionId: auction.id
             }).then(bid => {
                 Bid.findAll({
                     where: {
