@@ -2,14 +2,11 @@ var cors = require("cors");
 const express = require("express");
 const db = require("./models");
 const app = express();
-const bcrypt = require("bcryptjs");
 const path = require('path');
 const fileUpload = require('express-fileupload');
-const verifyAuthorization = require("./middlewares/verifyAuthorization");
 const {Auction, User, Bid, Product} = require("./models/index");
-const {createJWT} = require("./lib/security");
 const jwt_decode = require("jwt-decode");
-const {body, validationResult} = require('express-validator');
+const {body} = require('express-validator');
 const productController = require('./controllers/product.controller');
 const securityController = require('./controllers/security.controller');
 
@@ -40,6 +37,7 @@ app.get('/admin', (req, res) => {
     res.sendFile(path.join(__dirname + '/admin.html'));
 })
 
+// ----- Socket.IO
 io.on("connection", function (socket) {
 
     socket.on("join", (data) => {
