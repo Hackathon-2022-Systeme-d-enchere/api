@@ -1,7 +1,7 @@
 {
-  "name": "hackathon-wa-esgi",
+  "name": "hackathon-wa-esgi-auction",
   "version": "1.0.0",
-  "description": "Hackathon ESGI",
+  "description": "Subject: Auction feature on WA. Authors: Group4 - LEMOINE Thomas, HARAULT Valentin, LY Céline, PIEDAGNEL Bérenger, BARBE Dylan, COHEN Jérémie",
   "main": "io-server.js",
   "scripts": {
     "start": "node io-server"
