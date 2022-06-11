@@ -56,5 +56,7 @@ Installation steps:
 
 * To run the App,<br>
   **1.** Go to folder ``cd api``, create ``config.json`` file<br>
-  **2.** ``npm install``<br>
-  **3.** ``npm start``<br>
+  **2.** Connect your PostgreSQL database to the config file<br>
+  **3.** ``npm install``<br>
+  **4.** ``npm start``<br>
+  **5.** ``php -S localhost:8000``<br>
