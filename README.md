@@ -45,31 +45,16 @@ The idea we present is to create an auction feature on WorkAdventure.
 * Real time event handling - Socket.IO
 
 ## How it Works
-### How the data is accessed
-* All auctions
-    * NodeJS connects to Redis Cloud database. Frontend communicates with NodeJS backend through API calls.
-    * GET : /api/auctions fetches all the keys from Auctions Hash
-    * NodeJS uses 'redis' module to work with Redis Cloud. The redis client is created using the Redis credentials and hmget() equivalent of HMGET command is used to get data from Redis database.
-* Each auction
-    * GET : /api/auctions/{auctionId} fetches each auction item by id
-    * NodeJS uses 'redis' module to work with Redis Cloud. The redis client is created using the Redis credentials and hmget() equivalent of HMGET command is used to get data from Redis database.
-* All bidding data of an auction item
-    * GET : /api/bidding/{auctionId}
-    * NodeJS uses 'redis' module to work with Redis Cloud. The redis client is created using the Redis credentials and hmget() equivalent of HMGET command is used to get data from Redis database.
-* Profile settings
-    * GET : /api/settings
-    * NodeJS uses 'redis' module to work with Redis Cloud. The redis client is created using the Redis credentials and get() equivalent of GET command is used to get data from Redis database.
-* User info
-    * GET : /api/users/{email}
-    * NodeJS uses 'redis' module to work with Redis Cloud. The redis client is created using the Redis credentials and hmget() equivalent of HMGET command is used to get data from Redis database.
 
-## Installation
-Installation steps:
 ### Prerequisites
 
 - Node JS ^14.0 
 - NPM
 
+## Installation
+Installation steps:
+
 * To run the App,<br>
-  **1.** npm install.<br>
-  **2.** npm start.<br>
+  **1.** Go to folder ``cd api``, create ``config.json`` file<br>
+  **2.** ``npm install``<br>
+  **3.** ``npm start``<br>
