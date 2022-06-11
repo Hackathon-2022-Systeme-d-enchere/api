@@ -40,7 +40,7 @@ exports.create = async (req, res) => {
             "name": name,
             "minPrice": minPrice,
             "isSold": isSold,
-            "image": '/upload/' + fileUpload.name,
+            "image": '/uploads/' + fileUpload.name,
         })
 
         product.save()
