@@ -315,61 +315,61 @@
                                 Add auction
                             </button>
 
-                                <!-- Modal -->
-                                <div class="modal fade" id="auctionModal" tabindex="-1" aria-labelledby="auctionModal" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">Add Auction </h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <form method="post" action="http://locahost:2000/auction">
-                                                <div class="modal-body">
-                                                    <div>
-                                                        <div class="mb-3">
-                                                            <label for="nameInput" class="form-label">Name</label>
-                                                            <input type="name" class="form-control" id="nameInput" aria-describedby="nameHelp" name="name">
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <label for="startAt" class="form-label">Start At</label>
-                                                            <input type="startAt" class="form-control" id="startAtInput" aria-describedby="startAtHelp" name="startAt">
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <label for="endAt" class="form-label">End At</label>
-                                                            <input type="endAt" class="form-control" id="endAtInput" aria-describedby="endAtAtHelp" name="endAttAt">
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <label for="ownerInput" class="form-label">Owner</label>
-                                                            <input type="owner" class="form-control" id="ownerInput" aria-describedby="ownerHelp" name="owner">
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <label for="imageInput" class="form-label">Image</label>
-                                                            <input name="image" type="file" class="form-control" id="imageInput">
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" name="isActive" type="checkbox" value="" readonly id="isActiveInput">
-                                                            <label class="form-check-label" for="isActiveInput"> Is
-                                                                Active </label>
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <label for="roomIdInput" class="form-label">roomId</label>
-                                                            <input type="roomId" class="form-control" id="roomIdInput" aria-describedby="roomIdHelp" name="roomId">
-                                                        </div>
-
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                                        Close
-                                                    </button>
-                                                    <button type="button" class="btn btn-primary" @click="sendProduct">
-                                                        Add
-                                                    </button>
-                                                </div>
-                                            </form>
+                            <!-- Modal -->
+                            <div class="modal fade" id="auctionModal" tabindex="-1" aria-labelledby="auctionModal" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Add Auction </h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
+                                        <form method="post" action="http://locahost:2000/auction">
+                                            <div class="modal-body">
+                                                <div>
+                                                    <div class="mb-3">
+                                                        <label for="nameInput" class="form-label">Name</label>
+                                                        <input type="name" class="form-control" id="nameInput" aria-describedby="nameHelp" name="name">
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="startAt" class="form-label">Start At</label>
+                                                        <input type="startAt" class="form-control" id="startAtInput" aria-describedby="startAtHelp" name="startAt">
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="endAt" class="form-label">End At</label>
+                                                        <input type="endAt" class="form-control" id="endAtInput" aria-describedby="endAtAtHelp" name="endAttAt">
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="ownerInput" class="form-label">Owner</label>
+                                                        <input type="owner" class="form-control" id="ownerInput" aria-describedby="ownerHelp" name="owner">
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="imageInput" class="form-label">Image</label>
+                                                        <input name="image" type="file" class="form-control" id="imageInput">
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" name="isActive" type="checkbox" value="" readonly id="isActiveInput">
+                                                        <label class="form-check-label" for="isActiveInput"> Is
+                                                            Active </label>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="roomIdInput" class="form-label">roomId</label>
+                                                        <input type="roomId" class="form-control" id="roomIdInput" aria-describedby="roomIdHelp" name="roomId">
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                    Close
+                                                </button>
+                                                <button type="button" class="btn btn-primary" @click="sendProduct">
+                                                    Add
+                                                </button>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
+                            </div>
                         </div>
                     </div>
 
