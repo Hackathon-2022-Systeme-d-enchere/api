@@ -5,6 +5,9 @@ module.exports = (sequelize, Sequelize) => {
         },
         price: {
             type: Sequelize.DOUBLE
+        },
+        username: {
+            type: Sequelize.STRING
         }
     })
     return BidModel;
