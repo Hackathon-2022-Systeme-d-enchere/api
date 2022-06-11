@@ -102,8 +102,7 @@ io.on("connection", function (socket) {
                         },
                     ],
                     order: [
-                        [Bid, "price", "DESC"],
-                        [Product, "createdAt", "DESC"],
+                        [Bid, "price", "DESC"]
                     ],
                 }).then((product) => {
                     io.to(roomId).emit("active-product", {product: product});

@@ -258,7 +258,7 @@
                     minPrice: null,
                     image: null,
                     bids: [],
-                    highhestBid: null,
+                    highhestBid: 0,
                 }
             }
         },
@@ -268,7 +268,6 @@
             this.userToken = urlParams.get('userToken');
             this.zoneId = urlParams.get('zone');
             this.name = urlParams.get('name');
-            console.log(this.userToken);
             socket = io.connect('http://localhost:2000/', {
                 query: {
                     zoneId: this.zoneId,
@@ -295,7 +294,6 @@
         },
         methods: {
             openTab(tab) {
-                // remove class
                 document.getElementById('productsSold').classList.add('d-none');
                 document.getElementById('activeSale').classList.add('d-none');
                 document.getElementById('productsForSale').classList.add('d-none');
@@ -310,23 +308,21 @@
                 this.auction = data.auction
             },
             sendBid() {
-                if (this.activeProduct.bids.length > 0) {
-                    if (document.getElementById('user_bid').value !== "") {
-                        if (this.activeProduct.bids[0].price >= document.getElementById('user_bid').value) {
-                            toastr.error('Your bid must be higher than the current bid')
-                            return
-                        }
+                if (document.getElementById('user_bid').value !== "") {
+                    if (parseInt(document.getElementById('user_bid').value) > parseInt(this.activeProduct.highhestBid)
+                        && (parseInt(document.getElementById('user_bid').value) > parseInt(this.activeProduct.minPrice))) {
+                        socket.emit('new-bid', {
+                            bid: document.getElementById('user_bid').value,
+                            userToken: this.userToken,
+                            productId: document.getElementById('product_id').value,
+                            name: this.name
+                        });
                     } else {
-                        toastr.error('You must enter a bid')
-                        return
+                        toastr.error('Bid must be higher than current highhest bid')
                     }
+                } else {
+                    toastr.error('You must enter a bid')
                 }
-                socket.emit('new-bid', {
-                    bid: document.getElementById('user_bid').value,
-                    userToken: this.userToken,
-                    productId: document.getElementById('product_id').value,
-                    name: this.name
-                });
             },
             getBIds(data) {
                 this.activeProduct.bids = data.bids
@@ -340,7 +336,11 @@
             getActiveProduct(data) {
                 this.activeProduct = data.product
                 this.activeProduct.bids = data.product.Bids
-                this.activeProduct.highhestBid = data.product.Bids[0].price
+                if (data.product.Bids.length > 0) {
+                    this.activeProduct.highhestBid = data.product.Bids[0].price
+                } else {
+                    this.activeProduct.highhestBid = 0
+                }
             }
         }
     }).mount('#page-container')
