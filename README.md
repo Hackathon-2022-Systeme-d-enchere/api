@@ -51,7 +51,7 @@ The idea we present is to create an auction feature on WorkAdventure.
 - Node JS ^14.0 
 - NPM
 
-## Installation
+### Installation
 Installation steps:
 
 * To run the App,<br>

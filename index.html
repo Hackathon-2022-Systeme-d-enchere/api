@@ -51,7 +51,7 @@
                             <div class="block-content p-0 overflow-hidden">
                                 <a class="img-link img-fluid-100" data-toggle="layout" data-action="side_overlay_open"
                                    href="javascript:void(0)">
-                                    <img class="img-fluid rounded-top" :src="product.image" alt="">
+                                    <img class="img-fluid rounded-top" :src="'http://localhost:8000' + product.image" alt="">
                                 </a>
                             </div>
                             <div class="block-content">
@@ -99,7 +99,7 @@
                                 <div class="row g-0">
                                     <div class="col-md-4 col-lg-5 overflow-hidden d-flex align-items-center">
                                         <a href="">
-                                            <img class="img-fluid img-link" :src="activeProduct.image" alt="">
+                                            <img class="img-fluid img-link" :src="'http://localhost:8000/' +activeProduct.image" alt="">
                                         </a>
                                     </div>
                                     <div class="col-md-8 col-lg-7 d-flex align-items-center">
@@ -177,7 +177,7 @@
                             <div class="block-content p-0 overflow-hidden">
                                 <a class="img-link img-fluid-100" data-toggle="layout" data-action="side_overlay_open"
                                    href="javascript:void(0)">
-                                    <img class="img-fluid rounded-top" :src="product.image" alt="">
+                                    <img class="img-fluid rounded-top" :src="'http://localhost:8000/' +product.image" alt="">
                                 </a>
                             </div>
                             <div class="block-content">
