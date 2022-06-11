@@ -337,8 +337,10 @@
                                                         <input type="text" class="form-control" placeholder="Zone ID" aria-label="Zone ID" v-model="auctionZoneID">
                                                     </div>
                                                     <div class="mb-3">
-                                                        <select class="form-select" multiple aria-label="multiple select example">
-                                                            <option v-for="product in productAvailable" v-bind:value="product.id">{{product.name}}</option>
+                                                        <select class="form-select" multiple aria-label="multiple select example" v-model="auctionProducts">
+                                                            <option v-for="product in productAvailable" v-bind:value="product.id">
+                                                                {{product.name}}
+                                                            </option>
                                                         </select>
                                                     </div>
                                                     <div class="form-check">
@@ -399,11 +401,11 @@
                     <svg class="bd-placeholder-img rounded me-2" width="20" height="20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false">
                         <rect width="100%" height="100%" fill="#51C41A"></rect>
                     </svg>
-                    <strong class="me-auto">Produit créé</strong>
+                    <strong class="me-auto">Élément créé</strong>
                     <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close" @click='hideToast'></button>
                 </div>
                 <div class="toast-body">
-                    Le produit a bien été créé
+                    L'élément a bien été créé
                 </div>
             </div>
         </div>
@@ -439,7 +441,8 @@
                 productImage: null,
                 productMinPrice: null,
                 productSold: null,
-                productAvailable: []
+                productAvailable: [],
+                auctionProducts: []
             }
         },
         created() {
@@ -474,10 +477,11 @@
                     startAt: this.auctionStartAt,
                     roomId: this.auctionMapURL + this.auctionZoneID,
                     isActive: this.auctionActive,
+                    products: this.auctionProducts
                 }).then((response) => {
                     if (response.status === 201) {
                         this.showToast = true
-                        this.getAllProducts()
+                        this.getAllAuctions()
                     }
                 }).catch((error) => {
                     console.error(error)
@@ -500,7 +504,7 @@
             },
             productImageChange: function () {
                 this.productImage = this.$refs.file.files[0];
-            }
+            },
         }
     }).mount('#app')
 </script>

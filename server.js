@@ -43,7 +43,7 @@ app.get("/product", productController.getAll);
 app.post(
     "/auction",
     body("name").isString(),
-    body("startAt").isDate(),
+    body("startAt").isString(),
     body("isActive").isBoolean(),
     body("roomId").isString(),
     auctionController.create
