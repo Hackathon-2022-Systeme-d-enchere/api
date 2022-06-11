@@ -22,7 +22,7 @@ exports.create = async (req, res) => {
         return;
     }
 
-    fileUpload = req.files.image;
+    fileUpload = req.files.file;
 
     if (!['image/png', 'image/jpeg'].includes(fileUpload.mimetype)) {
         res.status(400).send('Invalid file extension.');

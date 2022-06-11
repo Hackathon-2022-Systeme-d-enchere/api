@@ -240,23 +240,17 @@
                                                 <div>
                                                     <div class="mb-3">
                                                         <label for="nameInput" class="form-label">Name</label>
-                                                        <input type="name" class="form-control" id="nameInput" aria-describedby="nameHelp" name="name" v-model="nameP">
+                                                        <input type="name" class="form-control" id="nameInput" aria-describedby="nameHelp" name="name" v-model="producName">
 
                                                     </div>
                                                     <div class="mb-3">
                                                         <label for="imageInput" class="form-label">Image</label>
-                                                        <input name="image" type="file" class="form-control" id="imageInput" v-model="imageP" @change="imageChange($event, $event.target.files)" accept="image/*">
+                                                        <input name="file" ref="file" type="file" class="form-control" id="imageInput" v-model="productImage" @change="imageChange" accept="image/*">
                                                     </div>
                                                     <div class="mb-3">
                                                         <label for="minPriceInput" class="form-label">Min Price</label>
-                                                        <input type="number" name="minPrice" class="form-control" id="minPriceInput" v-model="minPriceP">
+                                                        <input type="number" name="minPrice" class="form-control" id="minPriceInput" v-model="productMinPrice">
                                                     </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" name="isSold" type="checkbox" value="" readonly id="isSoldInput" v-model="isSoldP">
-                                                        <label class="form-check-label" for="isSoldInput"> Is
-                                                            Sold </label>
-                                                    </div>
-
 
                                                 </div>
                                             </div>
@@ -362,7 +356,7 @@
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                                                     Close
                                                 </button>
-                                                <button type="button" class="btn btn-primary" @click="sendProduct">
+                                                <button type="button" class="btn btn-primary" @click="sendAuction">
                                                     Add
                                                 </button>
                                             </div>
@@ -424,11 +418,11 @@
             return {
                 products: [],
                 showMenu: false,
-                idP: null,
-                nameP: null,
-                imageP: null,
-                minPriceP: null,
-                isSoldP: null
+                productId: null,
+                producName: null,
+                productImage: null,
+                productMinPrice: null,
+                productIsSold: null
             }
         },
         created() {
@@ -452,28 +446,20 @@
                 this.showMenu = !this.showMenu;
             },
             sendProduct: function (e) {
-                console.log("file", this.imageP)
-                axios.post("/product", {
-                    name: this.nameP,
-                    image: this.imageP,
-                    minPrice: this.minPriceP,
-                    isSold: this.isSoldP
-                }).then((val) => {
+                const formData = new FormData();
+                formData.append('file', this.productImage)
+                formData.append('name', this.producName)
+                formData.append('minPrice', this.productMinPrice)
+                formData.append('isSold', false)
+                axios.post("/product", formData).then((val) => {
                     console.log(val)
                 }).catch((error) => {
                     console.log(error)
                 })
                 console.log("send product")
             },
-            imageChange: function (arg, files) {
-                console.log("arg", arg)
-                for (let file in files) {
-                    console.log(file)
-                }
-
-                console.log("test", files)
-                this.fileP = files;
-
+            imageChange: function () {
+                this.productImage = this.$refs.file.files[0];
             }
         }
     }).mount('#app')
