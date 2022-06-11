@@ -14,7 +14,6 @@
 </head>
 <body>
 <div id="page-container" class="sidebar-mini side-scroll">
-
     <main id="main-container">
         <div v-if="auction.isActive">
             <div class="bg-body-extra-light">
@@ -148,7 +147,7 @@
                                     <thead>
                                     <tr class="bg-body-dark">
                                         <th class="text-center" style="width: 50px;">#</th>
-                                        <th>Name</th>
+                                        <th>User</th>
                                         <th class="d-none d-sm-table-cell" style="width: 15%;">Bids</th>
                                     </tr>
                                     </thead>
@@ -156,7 +155,7 @@
                                     <tr>
                                         <th class="text-center" scope="row">{{bid.id}}</th>
                                         <td class="fw-semibold">
-                                            <a href="">{{bid.userUID}}</a>
+                                            <a href="javascript:void(0)">{{bid.username}}</a>
                                         </td>
                                         <td class="d-none d-sm-table-cell">
                                             <span class="badge bg-success">{{ bid.price }}€</span>
@@ -248,8 +247,9 @@
                     name: null
                 },
                 bids: [],
-                userToken: window.location.search.split('=')[1],
-                zoneId: window.location.search.split('=')[2],
+                userToken: null,
+                zoneId: null,
+                name: null,
                 productsSold: [],
                 productsForSale: [],
                 activeProduct: {
@@ -263,6 +263,12 @@
             }
         },
         mounted() {
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+            this.userToken = urlParams.get('userToken');
+            this.zoneId = urlParams.get('zone');
+            this.name = urlParams.get('name');
+            console.log(this.userToken);
             socket = io.connect('http://localhost:2000/', {
                 query: {
                     zoneId: this.zoneId,
@@ -318,7 +324,8 @@
                 socket.emit('new-bid', {
                     bid: document.getElementById('user_bid').value,
                     userToken: this.userToken,
-                    productId: document.getElementById('product_id').value
+                    productId: document.getElementById('product_id').value,
+                    name: this.name
                 });
             },
             getBIds(data) {

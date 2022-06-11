@@ -101,7 +101,10 @@ io.on("connection", function (socket) {
                             model: Bid,
                         },
                     ],
-                    order: [[Bid, "price", "DESC"]],
+                    order: [
+                        [Bid, "price", "DESC"],
+                        [Product, "createdAt", "DESC"],
+                    ],
                 }).then((product) => {
                     io.to(roomId).emit("active-product", {product: product});
                 });
@@ -117,28 +120,33 @@ io.on("connection", function (socket) {
             where: {
                 roomId: decoded.room + roomId,
             },
-        }).then(() => {
-            Product.findByPk(data.productId).then((product) => {
-                Bid.create({
-                    userUID: decoded.user,
-                    price: data.bid,
-                    ProductId: product.id,
-                }).then(() => {
-                    Product.findOne({
-                        where: {
-                            id: product.id,
-                        },
-                        include: [
-                            {
-                                model: Bid,
-                            },
-                        ],
-                        order: [[Bid, "price", "DESC"]],
-                    }).then((product) => {
-                        io.to(roomId).emit("active-product", {product: product});
-                    });
+        }).then(auction => {
+            if (auction.isActive) {
+                Product.findByPk(data.productId).then((product) => {
+                    if (!product.isSold) {
+                        Bid.create({
+                            userUID: decoded.user,
+                            price: data.bid,
+                            ProductId: product.id,
+                            username: data.name
+                        }).then(() => {
+                            Product.findOne({
+                                where: {
+                                    id: product.id,
+                                },
+                                include: [
+                                    {
+                                        model: Bid,
+                                    },
+                                ],
+                                order: [[Bid, "price", "DESC"]],
+                            }).then((product) => {
+                                io.to(roomId).emit("active-product", {product: product});
+                            });
+                        });
+                    }
                 });
-            });
+            }
         });
     });
 
