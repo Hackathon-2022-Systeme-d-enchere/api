@@ -10,9 +10,6 @@ module.exports = (sequelize, Sequelize) => {
         endAt: {
             type: Sequelize.DATE
         },
-        image: {
-            type: Sequelize.STRING,
-        },
         isActive: {
             type: Sequelize.BOOLEAN,
             allowNull: false

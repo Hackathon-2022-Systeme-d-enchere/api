@@ -44,7 +44,6 @@ app.post(
     "/auction",
     body("name").isString(),
     body("startAt").isDate(),
-    body("endAt").isDate(),
     body("isActive").isBoolean(),
     body("roomId").isString(),
     auctionController.create

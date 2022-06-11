@@ -243,19 +243,18 @@
                                             <div class="modal-body">
                                                 <div>
                                                     <div class="mb-3">
-                                                        <label for="nameInput" class="form-label">Name</label>
-                                                        <input type="name" class="form-control" id="nameInput" aria-describedby="nameHelp" name="name" v-model="producName">
-
+                                                        <label for="productName" class="form-label">Name</label>
+                                                        <input type="name" class="form-control" id="productName" aria-describedby="nameHelp" name="name" v-model="producName">
                                                     </div>
                                                     <div class="mb-3">
-                                                        <label for="imageInput" class="form-label">Image</label>
-                                                        <input name="file" ref="file" type="file" class="form-control" id="imageInput" v-model="productImage" @change="imageChange" accept="image/*">
+                                                        <label for="productImage" class="form-label">Image</label>
+                                                        <input name="file" ref="file" type="file" class="form-control" id="productImage" v-model="productImage" @change="productImageChange" accept="image/*">
                                                     </div>
                                                     <div class="mb-3">
-                                                        <label for="minPriceInput" class="form-label">Min Price</label>
-                                                        <input type="number" name="minPrice" class="form-control" id="minPriceInput" v-model="productMinPrice">
+                                                        <label for="productMinPrice" class="form-label">Min
+                                                            Price</label>
+                                                        <input type="number" name="minPrice" class="form-control" id="productMinPrice" v-model="productMinPrice">
                                                     </div>
-
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
@@ -270,7 +269,6 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
 
@@ -325,35 +323,24 @@
                                             <div class="modal-body">
                                                 <div>
                                                     <div class="mb-3">
-                                                        <label for="nameInput" class="form-label">Name</label>
-                                                        <input type="name" class="form-control" id="nameInput" aria-describedby="nameHelp" name="name">
+                                                        <label for="auctionNameInput" class="form-label">Name</label>
+                                                        <input type="name" class="form-control" id="auctionNameInput" aria-describedby="nameHelp" name="name" v-model="auctionName">
                                                     </div>
                                                     <div class="mb-3">
-                                                        <label for="startAt" class="form-label">Start At</label>
-                                                        <input type="startAt" class="form-control" id="startAtInput" aria-describedby="startAtHelp" name="startAt">
+                                                        <label class="form-label" for="auctionStartAt">Start At</label>
+                                                        <input class="form-control" id="auctionStartAt" type="datetime-local" name="meeting-time" value="2018-06-12T19:30" min="2018-06-07T00:00" max="2018-06-14T00:00" v-model="auctionStartAt">
                                                     </div>
-                                                    <div class="mb-3">
-                                                        <label for="endAt" class="form-label">End At</label>
-                                                        <input type="endAt" class="form-control" id="endAtInput" aria-describedby="endAtAtHelp" name="endAttAt">
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label for="ownerInput" class="form-label">Owner</label>
-                                                        <input type="owner" class="form-control" id="ownerInput" aria-describedby="ownerHelp" name="owner">
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label for="imageInput" class="form-label">Image</label>
-                                                        <input name="image" type="file" class="form-control" id="imageInput">
+                                                    <label for="auctionRoomId" class="form-label">roomId</label>
+                                                    <div class="mb-3 input-group">
+                                                        <input id="auctionRoomId" type="text" class="form-control" placeholder="Map URL" aria-label="Map URL" v-model="auctionMapURL">
+                                                        <span class="input-group-text">+</span>
+                                                        <input type="text" class="form-control" placeholder="Zone ID" aria-label="Zone ID" v-model="auctionZoneID">
                                                     </div>
                                                     <div class="form-check">
-                                                        <input class="form-check-input" name="isActive" type="checkbox" value="" readonly id="isActiveInput">
-                                                        <label class="form-check-label" for="isActiveInput"> Is
+                                                        <input class="form-check-input" name="isActive" type="checkbox" value="" readonly id="auctionActive" v-model="auctionActive">
+                                                        <label class="form-check-label" for="auctionActive"> Is
                                                             Active </label>
                                                     </div>
-                                                    <div class="mb-3">
-                                                        <label for="roomIdInput" class="form-label">roomId</label>
-                                                        <input type="roomId" class="form-control" id="roomIdInput" aria-describedby="roomIdHelp" name="roomId">
-                                                    </div>
-
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
@@ -404,7 +391,9 @@
         <div class="toast-container position-fixed bottom-0 end-0 p-3">
             <div id="liveToast" class="toast" v-bind:class="(showToast)?'show':''" role="alert" aria-live="assertive" aria-atomic="true">
                 <div class="toast-header">
-                    <svg class="bd-placeholder-img rounded me-2" width="20" height="20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#51C41A"></rect></svg>
+                    <svg class="bd-placeholder-img rounded me-2" width="20" height="20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false">
+                        <rect width="100%" height="100%" fill="#51C41A"></rect>
+                    </svg>
                     <strong class="me-auto">Produit créé</strong>
                     <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close" @click='hideToast'></button>
                 </div>
@@ -434,11 +423,17 @@
                 products: [],
                 showMenu: false,
                 showToast: false,
+                auctionName: null,
+                auctionMapURL: null,
+                auctionZoneID: null,
+                auctionRoomId: null,
+                auctionStartAt: null,
+                auctionActive: null,
                 productId: null,
                 producName: null,
                 productImage: null,
                 productMinPrice: null,
-                productIsSold: null
+                productSold: null,
             }
         },
         created() {
@@ -466,6 +461,21 @@
             hideToast: function (e) {
                 this.showToast = !this.showToast;
             },
+            sendAuction: function (e) {
+                axios.post("/auction", {
+                    name: this.auctionName,
+                    startAt: this.auctionStartAt,
+                    roomId: this.auctionMapURL + this.auctionZoneID,
+                    isActive: this.auctionActive,
+                }).then((response) => {
+                    if (response.status === 201) {
+                        this.showToast = true
+                        this.getAllProducts()
+                    }
+                }).catch((error) => {
+                    console.error(error)
+                })
+            },
             sendProduct: function (e) {
                 const formData = new FormData();
                 formData.append('file', this.productImage)
@@ -481,7 +491,7 @@
                     console.error(error)
                 })
             },
-            imageChange: function () {
+            productImageChange: function () {
                 this.productImage = this.$refs.file.files[0];
             }
         }
