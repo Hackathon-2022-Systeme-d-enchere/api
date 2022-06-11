@@ -44,7 +44,7 @@ exports.create = async (req, res) => {
         })
 
         product.save()
-            .then(res.status(201).json('Product created'))
+            .then(res.status(201).json(product))
             .catch(e => {
                 res.status(500).json(e)
             })
