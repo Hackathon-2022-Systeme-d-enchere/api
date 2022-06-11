@@ -336,6 +336,11 @@
                                                         <span class="input-group-text">+</span>
                                                         <input type="text" class="form-control" placeholder="Zone ID" aria-label="Zone ID" v-model="auctionZoneID">
                                                     </div>
+                                                    <div class="mb-3">
+                                                        <select class="form-select" multiple aria-label="multiple select example">
+                                                            <option v-for="product in productAvailable" v-bind:value="product.id">{{product.name}}</option>
+                                                        </select>
+                                                    </div>
                                                     <div class="form-check">
                                                         <input class="form-check-input" name="isActive" type="checkbox" value="" readonly id="auctionActive" v-model="auctionActive">
                                                         <label class="form-check-label" for="auctionActive"> Is
@@ -434,6 +439,7 @@
                 productImage: null,
                 productMinPrice: null,
                 productSold: null,
+                productAvailable: []
             }
         },
         created() {
@@ -444,6 +450,7 @@
             getAllProducts: function () {
                 axios.get("/product").then((response) => {
                     this.products = response.data
+                    this.productAvailable = response.data.filter(product => product.isSold === false)
                 }).catch((error) => {
                     console.error(error)
                 });
